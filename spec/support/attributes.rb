@@ -4,3 +4,7 @@ def accounting_entry_attributes(overrides={})
       amount: 12.34
   }.merge(overrides)
 end
+
+def account_attributes(overrides={})
+  {name: 'Cash'}.merge(overrides)
+end

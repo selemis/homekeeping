@@ -41,6 +41,14 @@ describe AccountingEntry do
 
       expect(accounting_entry.errors[:amount].any?).to eq(true)
     end
+    
+    it 'can belong to an account' do
+      account = Account.new(account_attributes)
+      entry = AccountingEntry.new(accounting_entry_attributes)
+      account.accounting_entries << entry
+
+      expect(entry.account).to eq account
+    end
 
   end
 
