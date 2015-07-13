@@ -35,7 +35,38 @@ describe Account do
     expect(account.accounting_entries.first).to eq accounting_entry
   end
 
-  context 'having an acount with 5 entries and different days' do
+  it 'has a zero balance if it has no entries' do
+    account = Account.new(account_attributes)
+    expect(account.balance).to eq 0
+  end
+
+  it 'must have a type' do
+    account = Account.new({name: 'Cash'})
+
+    account.valid?
+
+    expect(account.errors[:type].any?).to eq(true)
+  end
+
+  it 'requires a account type that is in an approved list' do
+    account_types = %w[Assets Liabilities Equity Revenue Expenses]
+    account_types.each do |category|
+      account = Account.new(account_attributes(category: category))
+      account.valid?
+      expect(account.errors[:type].any?).to eq(false)
+    end
+  end
+
+  it 'rejects any account type that is not in the approved list' do
+    account_types = %w[Abc Cash Car]
+    account_types.each do |category|
+      account = Account.new(account_attributes(category: category))
+      account.valid?
+      expect(account.errors[:type].any?).to eq(true)
+    end
+  end
+
+  context 'Having an account with entries' do
 
     before do
       @entry1 = AccountingEntry.new({book_date: date_from('01-01-2015'), amount: 100.50})
@@ -43,7 +74,7 @@ describe Account do
       @entry3 = AccountingEntry.new({book_date: date_from('02-01-2015'), amount: 10})
       @entry4 = AccountingEntry.new({book_date: date_from('03-01-2015'), amount: -30})
       @entry5 = AccountingEntry.new({book_date: date_from('04-01-2015'), amount: 40.20})
-      @account = Account.new
+      @account = Account.new(account_attributes)
       @account.accounting_entries << @entry1 << @entry2 << @entry3 << @entry4 << @entry5
     end
 
@@ -55,18 +86,55 @@ describe Account do
       expect(@account.balance(date_from('02-01-2015'))).to eq 90
     end
 
-  end
+    context "given an account has 'Assets' type" do
 
-  it 'has a zero balance if it has no entries' do
-    account = Account.new(account_attributes)
-    expect(account.balance).to eq 0
-  end
+      it 'sums positive amounts as debits' do
+        expect(@account.debit).to eq 150.70
+      end
 
-  it 'has credits'
+      it 'sums negative amounts as credits' do
+        expect(@account.credit).to eq -50.50
+      end
+
+    end
+
+    context "given an account has 'Liabilities' type" do
+
+      before do
+        @account.name = 'Account Payable'
+        @account.category = 'Liabilities'
+      end
+
+      it 'sums positive amounts as credits' do
+        expect(@account.credit).to eq 150.70
+      end
+
+      it 'sums negative amounts as debits' do
+        expect(@account.debit).to eq -50.50
+      end
+
+    end
+
+    context "given an account has 'Equity' type" do
+
+      before do
+        @account.name = 'Capital'
+        @account.category = 'Equity'
+      end
+
+      it 'sums positive amounts as credits' do
+        expect(@account.credit).to eq 150.70
+      end
+
+      it 'sums negative amounts as debits' do
+        expect(@account.debit).to eq -50.50
+      end
+
+    end
+
+  end
 
   it 'calculates the credits until a date'
-
-  it 'has debits'
 
   it 'calculates the debits until a date'
 

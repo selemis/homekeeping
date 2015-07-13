@@ -6,5 +6,6 @@ def accounting_entry_attributes(overrides={})
 end
 
 def account_attributes(overrides={})
-  {name: 'Cash'}.merge(overrides)
+  {name: 'Cash',
+   category: 'Assets'}.merge(overrides)
 end
