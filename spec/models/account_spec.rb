@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+def date_from(string_format)
+  Date.strptime(string_format, '%d-%m-%Y')
+end
+
 describe Account do
 
   it 'has a name' do
@@ -29,27 +33,34 @@ describe Account do
 
     expect(account.accounting_entries.size).to eq 1
     expect(account.accounting_entries.first).to eq accounting_entry
-
   end
 
-  it 'has a balance' do
-    entry1 = AccountingEntry.new({book_date: Date.strptime('01-01-2015', '%d-%m-%Y'), amount: 100.50})
-    entry2 = AccountingEntry.new({book_date: Date.strptime('01-01-2015', '%d-%m-%Y'), amount: -20.50})
-    entry3 = AccountingEntry.new({book_date: Date.strptime('02-01-2015', '%d-%m-%Y'), amount: 10})
-    entry4 = AccountingEntry.new({book_date: Date.strptime('03-01-2015', '%d-%m-%Y'), amount: -30})
-    entry5 = AccountingEntry.new({book_date: Date.strptime('04-01-2015', '%d-%m-%Y'), amount: 40.20})
-    account = Account.new
-    account.accounting_entries << entry1 << entry2 << entry3 << entry4 << entry5
+  context 'having an acount with 5 entries and different days' do
 
-    expect(account.balance).to eq 100.20
+    before do
+      @entry1 = AccountingEntry.new({book_date: date_from('01-01-2015'), amount: 100.50})
+      @entry2 = AccountingEntry.new({book_date: date_from('01-01-2015'), amount: -20.50})
+      @entry3 = AccountingEntry.new({book_date: date_from('02-01-2015'), amount: 10})
+      @entry4 = AccountingEntry.new({book_date: date_from('03-01-2015'), amount: -30})
+      @entry5 = AccountingEntry.new({book_date: date_from('04-01-2015'), amount: 40.20})
+      @account = Account.new
+      @account.accounting_entries << @entry1 << @entry2 << @entry3 << @entry4 << @entry5
+    end
+
+    it 'has a balance' do
+      expect(@account.balance).to eq 100.20
+    end
+
+    it 'calculates a balance until a date' do
+      expect(@account.balance(date_from('02-01-2015'))).to eq 90
+    end
+
   end
 
   it 'has a zero balance if it has no entries' do
     account = Account.new(account_attributes)
     expect(account.balance).to eq 0
   end
-
-  it 'calculates a balance until a date'
 
   it 'has credits'
 
