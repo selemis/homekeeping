@@ -13,32 +13,35 @@ class Account < ActiveRecord::Base
   end
 
   def debit(until_date=nil)
-    return 0 if accounting_entries.empty?
-    filter = date_filter(until_date)
-    case category
-      when 'Assets', 'Expenses'
-        sum_amounts(positive_entries(filtered_entries(filter)))
-      when 'Liabilities', 'Equity', 'Revenue'
-        sum_amounts(negative_entries(filtered_entries(filter)))
-      else
-        0
-    end
+    flow(until_date, sum_positive_filtered_entries, sum_negative_filtered_entries)
   end
 
   def credit(until_date=nil)
+    flow(until_date, sum_negative_filtered_entries, sum_positive_filtered_entries)
+  end
+
+  private
+
+  def flow(until_date, assets, liabilities_and_equity)
     return 0 if accounting_entries.empty?
     filter = date_filter(until_date)
     case category
       when 'Assets', 'Expenses'
-        sum_amounts(negative_entries(filtered_entries(filter)))
+        assets.call(filter)
       when 'Liabilities', 'Equity', 'Revenue'
-        sum_amounts(positive_entries(filtered_entries(filter)))
+        liabilities_and_equity.call(filter)
       else
         0
     end
   end
 
-  private
+  def sum_negative_filtered_entries
+    Proc.new { |filter| sum_amounts(negative_entries(filtered_entries(filter))) }
+  end
+
+  def sum_positive_filtered_entries
+    Proc.new { |filter| sum_amounts(positive_entries(filtered_entries(filter))) }
+  end
 
   def sum_amounts(entries)
     entries.map { |entry| entry.amount }.reduce(:+)
