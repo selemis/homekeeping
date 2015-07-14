@@ -214,6 +214,4 @@ describe Account do
 
   end
 
-  it 'can have a parent account'
-
 end
