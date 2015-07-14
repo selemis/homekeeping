@@ -6,10 +6,24 @@ end
 
 describe Account do
 
-  it 'has a name' do
-    account = Account.new
-    account.name='Cash'
-    expect(account.name).to eq 'Cash'
+  context 'Give an account' do
+
+    before do
+      @account = Account.new(account_attributes)
+    end
+
+    it 'has a name' do
+      expect(@account.name).to eq 'Cash'
+    end
+
+    it 'is valid with example attributes' do
+      expect(@account.valid?).to be_true
+    end
+
+    it 'has a zero balance if it has no entries' do
+      expect(@account.balance).to eq 0
+    end
+
   end
 
   it 'requires a name' do
@@ -20,24 +34,15 @@ describe Account do
     expect(account.errors[:name].any?).to be_true
   end
 
-  it 'is valid with example attributes' do
-    account = Account.new(account_attributes)
-
-    expect(account.valid?).to be_true
-  end
 
   it 'has entries' do
     accounting_entry = AccountingEntry.new(accounting_entry_attributes)
     account = Account.new
+
     account.accounting_entries << accounting_entry
 
     expect(account.accounting_entries.size).to eq 1
     expect(account.accounting_entries.first).to eq accounting_entry
-  end
-
-  it 'has a zero balance if it has no entries' do
-    account = Account.new(account_attributes)
-    expect(account.balance).to eq 0
   end
 
   it 'must have a type' do
@@ -96,6 +101,15 @@ describe Account do
         expect(@account.credit).to eq -50.50
       end
 
+      it  'calculates debits until a date' do
+        expect(@account.debit(date_from('02-01-2015'))).to eq 110.50
+
+      end
+
+      it  'calculates credits until a date' do
+        expect(@account.credit(date_from('02-01-2015'))).to eq -20.50
+      end
+
     end
 
     context "given an account has 'Liabilities' type" do
@@ -111,6 +125,14 @@ describe Account do
 
       it 'sums negative amounts as debits' do
         expect(@account.debit).to eq -50.50
+      end
+
+      it  'calculates credits until a date' do
+        expect(@account.credit(date_from('02-01-2015'))).to eq 110.50
+      end
+
+      it  'calculates debits until a date' do
+        expect(@account.debit(date_from('02-01-2015'))).to eq -20.50
       end
 
     end
@@ -130,13 +152,67 @@ describe Account do
         expect(@account.debit).to eq -50.50
       end
 
+      it  'calculates credits until a date' do
+        expect(@account.credit(date_from('02-01-2015'))).to eq 110.50
+      end
+
+      it  'calculates debits until a date' do
+        expect(@account.debit(date_from('02-01-2015'))).to eq -20.50
+      end
+
+    end
+
+    context "given an account has 'Revenue' type" do
+
+      before do
+        @account.name = 'Salary'
+        @account.category = 'Revenue'
+      end
+
+      it 'sums positive amounts as credits' do
+        expect(@account.credit).to eq 150.70
+      end
+
+      it 'sums negative amounts as debits' do
+        expect(@account.debit).to eq -50.50
+      end
+
+      it  'calculates credits until a date' do
+        expect(@account.credit(date_from('02-01-2015'))).to eq 110.50
+      end
+
+      it  'calculates debits until a date' do
+        expect(@account.debit(date_from('02-01-2015'))).to eq -20.50
+      end
+
+    end
+
+    context "given an account has 'Expenses' type" do
+
+      before do
+        @account.name = 'Food'
+        @account.category = 'Expenses'
+      end
+
+      it 'sums positive amounts as debits' do
+        expect(@account.debit).to eq 150.70
+      end
+
+      it 'sums negative amounts as credits' do
+        expect(@account.credit).to eq -50.50
+      end
+
+      it  'calculates credits until a date' do
+        expect(@account.credit(date_from('02-01-2015'))).to eq -20.50
+      end
+
+      it  'calculates debits until a date' do
+        expect(@account.debit(date_from('02-01-2015'))).to eq 110.50
+      end
+
     end
 
   end
-
-  it 'calculates the credits until a date'
-
-  it 'calculates the debits until a date'
 
   it 'can have a parent account'
 

@@ -16,16 +16,19 @@ class Account < ActiveRecord::Base
         .reduce(:+)
   end
 
-  def debit
+  def debit(until_date=nil)
     return 0 if accounting_entries.empty?
+    filter = date_filter(until_date)
     case category
-      when 'Assets'
+      when 'Assets', 'Expenses'
         accounting_entries
+            .select { |entry| filter.call(entry) }
             .select { |entry| entry.amount > 0 }
             .map { |entry| entry.amount }
             .reduce(:+)
-      when 'Liabilities', 'Equity'
+      when 'Liabilities', 'Equity', 'Revenue'
         accounting_entries
+            .select { |entry| filter.call(entry) }
             .reject { |entry| entry.amount > 0 }
             .map { |entry| entry.amount }
             .reduce(:+)
@@ -34,23 +37,25 @@ class Account < ActiveRecord::Base
     end
   end
 
-  def credit
+  def credit(until_date=nil)
     return 0 if accounting_entries.empty?
+    filter = date_filter(until_date)
     case category
-      when 'Assets'
+      when 'Assets', 'Expenses'
         accounting_entries
+            .select { |entry| filter.call(entry) }
             .reject { |entry| entry.amount > 0 }
             .map { |entry| entry.amount }
             .reduce(:+)
-      when 'Liabilities', 'Equity'
+      when 'Liabilities', 'Equity', 'Revenue'
         accounting_entries
+            .select { |entry| filter.call(entry) }
             .select { |entry| entry.amount > 0 }
             .map { |entry| entry.amount }
             .reduce(:+)
       else
         0
     end
-
   end
 
   private
