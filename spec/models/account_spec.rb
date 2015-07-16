@@ -26,6 +26,24 @@ describe Account do
       expect(@account.balance).to eq 0
     end
 
+    it 'has a zero credit if it has no entries' do
+      expect(@account.credit).to eq 0
+    end
+
+    it 'has a zero debit if it has no entries' do
+      expect(@account.debit).to eq 0
+    end
+
+    it 'has a zero debit if the account has only credits'
+
+    it 'has a zero credit if the account has only debits' do
+      entry = AccountingEntry.new(accounting_entry_attributes)
+      @account.accounting_entries << entry
+
+      expect(@account.debit).to eq accounting_entry_attributes[:amount]
+      expect(@account.credit).to eq 0
+    end
+
   end
 
   it 'requires a name' do

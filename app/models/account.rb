@@ -44,6 +44,7 @@ class Account < ActiveRecord::Base
   end
 
   def sum_amounts_of(entries)
+    return 0 if entries.empty?
     entries.map { |entry| entry.amount }.reduce(:+)
   end
 
