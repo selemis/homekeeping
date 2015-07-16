@@ -9,49 +9,49 @@ class Account < ActiveRecord::Base
 
   def balance(until_date=nil)
     return 0 if accounting_entries.empty?
-    sum_amounts(filtered_entries(date_filter(until_date)))
+    sum_amounts_of(filtered_entries(date_filter(until_date)))
   end
 
   def debit(until_date=nil)
-    flow(until_date, sum_positive_filtered_entries, sum_negative_filtered_entries)
+    process(until_date, sum_positive_filtered_entries, sum_negative_filtered_entries)
   end
 
   def credit(until_date=nil)
-    flow(until_date, sum_negative_filtered_entries, sum_positive_filtered_entries)
+    process(until_date, sum_negative_filtered_entries, sum_positive_filtered_entries)
   end
 
   private
 
-  def flow(until_date, assets, liabilities_and_equity)
+  def process(until_date, handle_assets_and_expenses, handle_liabilitites_equity_and_revenue)
     return 0 if accounting_entries.empty?
     filter = date_filter(until_date)
     case category
       when 'Assets', 'Expenses'
-        assets.call(filter)
+        handle_assets_and_expenses.call(filter)
       when 'Liabilities', 'Equity', 'Revenue'
-        liabilities_and_equity.call(filter)
+        handle_liabilitites_equity_and_revenue.call(filter)
       else
         0
     end
   end
 
   def sum_negative_filtered_entries
-    Proc.new { |filter| sum_amounts(negative_entries(filtered_entries(filter))) }
+    Proc.new { |filter| sum_amounts_of(negative_entries_of(filtered_entries(filter))) }
   end
 
   def sum_positive_filtered_entries
-    Proc.new { |filter| sum_amounts(positive_entries(filtered_entries(filter))) }
+    Proc.new { |filter| sum_amounts_of(positive_entries_of(filtered_entries(filter))) }
   end
 
-  def sum_amounts(entries)
+  def sum_amounts_of(entries)
     entries.map { |entry| entry.amount }.reduce(:+)
   end
 
-  def positive_entries(entries)
+  def positive_entries_of(entries)
     entries.select { |entry| entry.amount > 0 }
   end
 
-  def negative_entries(entries)
+  def negative_entries_of(entries)
     entries.reject { |entry| entry.amount > 0 }
   end
 

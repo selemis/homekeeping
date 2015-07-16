@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+include AccountAssertable
+
 def date_from(string_format)
   Date.strptime(string_format, '%d-%m-%Y')
 end
@@ -33,7 +35,6 @@ describe Account do
 
     expect(account.errors[:name].any?).to be_true
   end
-
 
   it 'has entries' do
     accounting_entry = AccountingEntry.new(accounting_entry_attributes)
@@ -93,22 +94,7 @@ describe Account do
 
     context "given an account has 'Assets' type" do
 
-      it 'sums positive amounts as debits' do
-        expect(@account.debit).to eq 150.70
-      end
-
-      it 'sums negative amounts as credits' do
-        expect(@account.credit).to eq -50.50
-      end
-
-      it  'calculates debits until a date' do
-        expect(@account.debit(date_from('02-01-2015'))).to eq 110.50
-
-      end
-
-      it  'calculates credits until a date' do
-        expect(@account.credit(date_from('02-01-2015'))).to eq -20.50
-      end
+      assert_positive_debits_negative_credits
 
     end
 
@@ -119,21 +105,7 @@ describe Account do
         @account.category = 'Liabilities'
       end
 
-      it 'sums positive amounts as credits' do
-        expect(@account.credit).to eq 150.70
-      end
-
-      it 'sums negative amounts as debits' do
-        expect(@account.debit).to eq -50.50
-      end
-
-      it  'calculates credits until a date' do
-        expect(@account.credit(date_from('02-01-2015'))).to eq 110.50
-      end
-
-      it  'calculates debits until a date' do
-        expect(@account.debit(date_from('02-01-2015'))).to eq -20.50
-      end
+      assert_positive_credits_negative_debits
 
     end
 
@@ -144,21 +116,7 @@ describe Account do
         @account.category = 'Equity'
       end
 
-      it 'sums positive amounts as credits' do
-        expect(@account.credit).to eq 150.70
-      end
-
-      it 'sums negative amounts as debits' do
-        expect(@account.debit).to eq -50.50
-      end
-
-      it  'calculates credits until a date' do
-        expect(@account.credit(date_from('02-01-2015'))).to eq 110.50
-      end
-
-      it  'calculates debits until a date' do
-        expect(@account.debit(date_from('02-01-2015'))).to eq -20.50
-      end
+      assert_positive_credits_negative_debits
 
     end
 
@@ -169,21 +127,7 @@ describe Account do
         @account.category = 'Revenue'
       end
 
-      it 'sums positive amounts as credits' do
-        expect(@account.credit).to eq 150.70
-      end
-
-      it 'sums negative amounts as debits' do
-        expect(@account.debit).to eq -50.50
-      end
-
-      it  'calculates credits until a date' do
-        expect(@account.credit(date_from('02-01-2015'))).to eq 110.50
-      end
-
-      it  'calculates debits until a date' do
-        expect(@account.debit(date_from('02-01-2015'))).to eq -20.50
-      end
+      assert_positive_credits_negative_debits
 
     end
 
@@ -194,21 +138,7 @@ describe Account do
         @account.category = 'Expenses'
       end
 
-      it 'sums positive amounts as debits' do
-        expect(@account.debit).to eq 150.70
-      end
-
-      it 'sums negative amounts as credits' do
-        expect(@account.credit).to eq -50.50
-      end
-
-      it  'calculates credits until a date' do
-        expect(@account.credit(date_from('02-01-2015'))).to eq -20.50
-      end
-
-      it  'calculates debits until a date' do
-        expect(@account.debit(date_from('02-01-2015'))).to eq 110.50
-      end
+      assert_positive_debits_negative_credits
 
     end
 
