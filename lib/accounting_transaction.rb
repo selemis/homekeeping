@@ -31,6 +31,20 @@ class AccountingTransaction
 
   end
 
+  def valid?
+    @credits.map { |account, amount| amount.abs }.reduce(:+) == @debits.map { |account, amount| amount.abs }.reduce(:+)
+  end
+  
+  def commit
+    if valid?
+      ActiveRecord::Base.transaction do
+        @credits.each { |account, amount| account.save }
+        @debits.each { |account, amount| account.save }
+      end
+    end
+  end
+
+
   private
 
   #duplicated fix later

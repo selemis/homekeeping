@@ -34,7 +34,13 @@ describe Account do
       expect(@account.debit).to eq 0
     end
 
-    it 'has a zero debit if the account has only credits'
+    it 'has a zero debit if the account has only credits' do
+      entry = AccountingEntry.new(accounting_entry_attributes)
+      @account.accounting_entries << entry
+
+      expect(@account.debit).to eq accounting_entry_attributes[:amount]
+      expect(@account.credit).to eq 0
+    end
 
     it 'has a zero credit if the account has only debits' do
       entry = AccountingEntry.new(accounting_entry_attributes)
@@ -64,12 +70,12 @@ describe Account do
     expect(account.accounting_entries.first).to eq accounting_entry
   end
 
-  it 'must have a type' do
+  it 'must have a category' do
     account = Account.new({name: 'Cash'})
 
     account.valid?
 
-    expect(account.errors[:type].any?).to eq(true)
+    expect(account.errors[:category].any?).to eq(true)
   end
 
   it 'requires a account type that is in an approved list' do
@@ -86,7 +92,7 @@ describe Account do
     account_types.each do |category|
       account = Account.new(account_attributes(category: category))
       account.valid?
-      expect(account.errors[:type].any?).to eq(true)
+      expect(account.errors[:category].any?).to eq(true)
     end
   end
 

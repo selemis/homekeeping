@@ -1,11 +1,10 @@
 class Account < ActiveRecord::Base
 
-  TYPES = %w[Assets Liabilities Equity Revenue Expenses]
+  CATEGORIES = %w[Assets Liabilities Equity Revenue Expenses]
 
-  alias_attribute :category, :type
   has_many :accounting_entries
   validates :name, presence: true
-  validates :type, inclusion: {in: TYPES}
+  validates :category, inclusion: {in: CATEGORIES}
 
   def balance(until_date=nil)
     return 0 if accounting_entries.empty?
