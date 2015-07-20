@@ -1,4 +1,3 @@
-require 'accounting_transaction'
 require 'spec_helper'
 
 include TransactionAssertable
@@ -30,12 +29,14 @@ describe 'placing an accounting transaction' do
            credit: 100, 
            debit: 100
       })
+
+      puts "Printing #{@transaction.accounting_entries.size}"
       expect(@transaction.valid?).to be_true
     end
 
     it 'commiting the transaction saves the accounting entries to the database' do
       @transaction.place
-      @transaction.commit
+      @transaction.save
 
       assert_account_from_db @cash
       assert_account_from_db @salary
@@ -68,7 +69,7 @@ describe 'placing an accounting transaction' do
 
     it 'commiting the transaction saves the accounting entries to the database' do
       @transaction.place
-      @transaction.commit
+      @transaction.save
 
       assert_account_from_db @cash
       assert_account_from_db @savings_account
@@ -101,7 +102,7 @@ describe 'placing an accounting transaction' do
 
     it 'commiting the transaction saves the accounting entries to the database' do
       @transaction.place
-      @transaction.commit
+      @transaction.save
 
       assert_account_from_db @cash
       assert_account_from_db @groceries

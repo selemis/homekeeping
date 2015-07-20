@@ -8,7 +8,7 @@ end
 
 describe Account do
 
-  context 'Give an account' do
+  context 'Given an account' do
 
     before do
       @account = Account.new(account_attributes)

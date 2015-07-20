@@ -1,6 +1,10 @@
-class AccountingTransaction
+class AccountingTransaction < ActiveRecord::Base
+
+  has_many :accounting_entries
+  validate :double_check_credits_debits
 
   def initialize
+    super
     @credits = Hash.new
     @debits = Hash.new
   end
@@ -31,20 +35,24 @@ class AccountingTransaction
 
   end
 
-  def valid?
+  def credits_equals_debits?
     @credits.map { |account, amount| amount.abs }.reduce(:+) == @debits.map { |account, amount| amount.abs }.reduce(:+)
   end
+
+  def double_check_credits_debits
+    errors.add(:credit_debits, "Credits not equal debits") unless credits_equals_debits?
+  end
   
-  def commit
-    if valid?
+  def save
+    super
+    if credits_equals_debits?
       ActiveRecord::Base.transaction do
         @credits.each { |account, amount| account.save }
         @debits.each { |account, amount| account.save }
       end
     end
   end
-
-
+  
   private
 
   #duplicated fix later
@@ -63,5 +71,5 @@ class AccountingTransaction
   def amount_sign_for_credit(account)
     -1 * amount_sign_for_debit(account)
   end
-
+  
 end
