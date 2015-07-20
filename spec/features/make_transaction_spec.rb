@@ -15,6 +15,7 @@ describe 'placing an accounting transaction' do
       @cash = Account.new(name: 'Cash', category: 'Assets')
 
       @transaction = AccountingTransaction.new
+      @transaction.book_date= Date.today
       @transaction.credit(@salary, 100)
       @transaction.debit(@cash, 100)
     end  
@@ -30,7 +31,6 @@ describe 'placing an accounting transaction' do
            debit: 100
       })
 
-      puts "Printing #{@transaction.accounting_entries.size}"
       expect(@transaction.valid?).to be_true
     end
 
@@ -51,6 +51,7 @@ describe 'placing an accounting transaction' do
       @savings_account = Account.new(name: 'Savings Account', category: 'Assets')
 
       @transaction = AccountingTransaction.new
+      @transaction.book_date = Date.today
       @transaction.credit(@savings_account, 100)
       @transaction.debit(@cash, 100)
     end
@@ -84,6 +85,7 @@ describe 'placing an accounting transaction' do
       @groceries = Account.new(name: 'Groceries', category: 'Expenses')
 
       @transaction = AccountingTransaction.new
+      @transaction.book_date = Date.today
       @transaction.credit(@cash, 50)
       @transaction.debit(@groceries, 50)
     end
@@ -93,10 +95,10 @@ describe 'placing an accounting transaction' do
       @transaction.place
 
       assert_transaction_placement({
-           credit_account: @cash, 
-           debit_account: @groceries, 
-           credit: -50, 
-           debit: 50
+        credit_account: @cash, 
+        debit_account: @groceries, 
+        credit: -50, 
+        debit: 50
       })
     end
 
