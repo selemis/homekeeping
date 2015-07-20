@@ -74,33 +74,37 @@ describe AccountingTransaction do
       expect(trans.errors[:book_date].any?).to eq(true)
     end
     
-    xit 'requires the credits to be equal to debits' do
-
-      cash = Account.new(name: 'Cash', category: 'Assets')
-      savings_account = Account.new(name: 'Savings Account', category: 'Assets')
-      transaction = AccountingTransaction.new
-      transaction.book_date = Date.today
-      credit_entry = AccountingEntry.new(book_date: Date.today, amount: -100)
-      debit_entry = AccountingEntry.new(book_date: Date.today, amount: 100)
-
-      credit_entry.account = savings_account
-      debit_entry.account = cash
-
-      transaction.accounting_entries << credit_entry
-      transaction.accounting_entries << debit_entry
-
-      credits = transaction.accounting_entries.map {|entry| entry.account.credit}.reduce(:+)
-      puts transaction.accounting_entries.map {|entry| entry.account.accounting_entries.size}
-      debits = transaction.accounting_entries.map {|entry| entry.account.debit}.reduce(:+)
-
-      expect(credits).to eq 100
-      expect(debits).to eq 100
-
+    context 'is valid if credits equals debits' do
       
-     # transaction.credit(savings_account, 100)
-     # transaction.debit(cash, 100)
-    
+      before do
+        @transaction = AccountingTransaction.new
+        @transaction.book_date = Date.today
+        credit_entry = AccountingEntry.new(book_date: Date.today, amount: -100)
+        debit_entry = AccountingEntry.new(book_date: Date.today, amount: 100)
+        @transaction.accounting_entries << credit_entry
+        @transaction.accounting_entries << debit_entry
+      end
+
+      xit 'requires the credits to be equal to debits' do
+        @transaction.valid?
+
+        expect(@transaction.errors[:zero_amount_entries].any?).to be_false
+        #expect(transaction.accounting_entries.map{|entry| entry.amount}.reduce(:+)).to eq 0
+      end
+
+      xit 'is not valid if the accounting entries amounts do not sum up to 0' do
+        entry = AccountingEntry.new(book_date: Date.today, amount: -10)
+        @transaction.accounting_entries << entry
+
+        @transaction.valid?
+
+        expect(@transaction.errors[:zero_amount_entries].any?).to be_true
+      end
+
     end
+
+
+
 
     it 'the transaction book date must be the same as the booking dates of all its entries'
   

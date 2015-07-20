@@ -31,6 +31,7 @@ describe 'placing an accounting transaction' do
            debit: 100
       })
 
+      puts @transaction.accounting_entries.map{|entry| entry.amount}
       expect(@transaction.valid?).to be_true
     end
 

@@ -49,7 +49,7 @@ class AccountingTransaction < ActiveRecord::Base
   def at_least_2_entries
     errors.add(:accounting_entries_size, "Account must have at least 2 entries") if accounting_entries.size < 2
   end
-  
+
   def save
     if valid?
       ActiveRecord::Base.transaction do
