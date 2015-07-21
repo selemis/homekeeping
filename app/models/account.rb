@@ -11,12 +11,28 @@ class Account < ActiveRecord::Base
     sum_amounts_of(filtered_entries(date_filter(until_date)))
   end
 
-  def debit(until_date=nil)
+  def calculate_debit(until_date=nil)
     process(until_date, sum_positive_filtered_entries, sum_negative_filtered_entries)
   end
 
-  def credit(until_date=nil)
+  def calculate_credit(until_date=nil)
     process(until_date, sum_negative_filtered_entries, sum_positive_filtered_entries)
+  end
+
+  #TODO change date
+  #TODO remember to save
+  def credit(amount)
+    amount_with_sign = amount_sign_for_credit * amount
+    entry = AccountingEntry.new(book_date: Date.today, amount: amount_with_sign)
+    accounting_entries << entry
+    entry
+  end
+
+  def debit(amount)
+    amount_with_sign = amount_sign_for_debit * amount
+    entry = AccountingEntry.new(book_date: Date.today, amount: amount_with_sign)
+    accounting_entries << entry
+    entry
   end
 
   private
@@ -65,6 +81,23 @@ class Account < ActiveRecord::Base
     else
       Proc.new { |entry| entry.book_date <= until_date }
     end
+  end
+
+  #duplicated fix later
+  def amount_sign_for_debit
+    case category
+      when 'Assets', 'Expenses'
+        1
+      when 'Liabilities', 'Equity', 'Revenue'
+        -1
+      else
+        1
+    end
+  end
+
+  #duplicated fix later
+  def amount_sign_for_credit
+    -1 * amount_sign_for_debit
   end
 
 end

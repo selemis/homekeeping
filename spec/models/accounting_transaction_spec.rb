@@ -38,6 +38,7 @@ describe AccountingTransaction do
 
         before do
           entry = AccountingEntry.new(accounting_entry_attributes)
+          entry.account = Account.new(account_attributes)
           @trans.accounting_entries << entry
         end
 
@@ -51,6 +52,7 @@ describe AccountingTransaction do
           
           before do
             entry = AccountingEntry.new(accounting_entry_attributes({amount: accounting_entry_attributes[:amount] * -1}))
+            entry.account = Account.new(account_attributes)
             @trans.accounting_entries << entry
           end
 
@@ -80,25 +82,31 @@ describe AccountingTransaction do
         @transaction = AccountingTransaction.new
         @transaction.book_date = Date.today
         credit_entry = AccountingEntry.new(book_date: Date.today, amount: -100)
+        savings_account = Account.new(name: 'Savings Account', category: 'Assets')
+        credit_entry.account = savings_account
+
+        @cash = Account.new(name: 'Cash', category: 'Assets')
         debit_entry = AccountingEntry.new(book_date: Date.today, amount: 100)
+        debit_entry.account = @cash
         @transaction.accounting_entries << credit_entry
         @transaction.accounting_entries << debit_entry
       end
 
-      xit 'requires the credits to be equal to debits' do
+      it 'requires the credits to be equal to debits' do
         @transaction.valid?
 
-        expect(@transaction.errors[:zero_amount_entries].any?).to be_false
+        expect(@transaction.errors[:credits_debits].any?).to be_false
         #expect(transaction.accounting_entries.map{|entry| entry.amount}.reduce(:+)).to eq 0
       end
 
-      xit 'is not valid if the accounting entries amounts do not sum up to 0' do
+      it 'is not valid if the accounting entries amounts do not sum up to 0' do
         entry = AccountingEntry.new(book_date: Date.today, amount: -10)
+        entry.account = @cash
         @transaction.accounting_entries << entry
 
         @transaction.valid?
 
-        expect(@transaction.errors[:zero_amount_entries].any?).to be_true
+        expect(@transaction.errors[:credits_debits].any?).to be_true
       end
 
     end

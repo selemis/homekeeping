@@ -23,31 +23,15 @@ class AccountingTransaction < ActiveRecord::Base
     #TODO change date
     #TODO remember to save
     @credits.each do |account, amount|
-      amount_with_sign = amount_sign_for_credit(account) * amount
-      entry = AccountingEntry.new(book_date: Date.today, amount: amount_with_sign)
+      entry = account.credit(amount)
       accounting_entries << entry
-      account.accounting_entries << entry
     end
   
     @debits.each do |account, amount|
-      amount_with_sign = amount_sign_for_debit(account) * amount
-      entry = AccountingEntry.new(book_date: Date.today, amount: amount_with_sign)
+      entry = account.debit(amount)
       accounting_entries << entry
-      account.accounting_entries << entry
     end
 
-  end
-
-  def credits_equals_debits?
-    @credits.map { |account, amount| amount.abs }.reduce(:+) == @debits.map { |account, amount| amount.abs }.reduce(:+)
-  end
-
-  def double_check_credits_debits
-    errors.add(:credit_debits, "Credits not equal debits") unless credits_equals_debits?
-  end
-
-  def at_least_2_entries
-    errors.add(:accounting_entries_size, "Account must have at least 2 entries") if accounting_entries.size < 2
   end
 
   def save
@@ -59,26 +43,26 @@ class AccountingTransaction < ActiveRecord::Base
         @credits.each { |account, amount| account.save }
         @debits.each { |account, amount| account.save }
       end
+    else
+      raise errors.full_messages.join(',')
     end
   end
-  
+
   private
 
-  #duplicated fix later
-  def amount_sign_for_debit(account)
-    case account.category
-      when 'Assets', 'Expenses'
-        1
-      when 'Liabilities', 'Equity', 'Revenue'
-        -1
-      else
-        1
-    end
+  def credits_equals_debits?
+    d = accounting_entries.select{|entry| entry.debit?}.map{|entry| entry.amount.abs}.reduce(:+)
+    c = accounting_entries.select{|entry| entry.credit?}.map{|entry| entry.amount.abs}.reduce(:+)
+    d == c
+    #@credits.map { |account, amount| amount.abs }.reduce(:+) == @debits.map { |account, amount| amount.abs }.reduce(:+)
   end
 
-  #duplicated fix later
-  def amount_sign_for_credit(account)
-    -1 * amount_sign_for_debit(account)
+  def double_check_credits_debits
+    errors.add(:credits_debits, "Credits not equal debits") unless credits_equals_debits?
+  end
+
+  def at_least_2_entries
+    errors.add(:accounting_entries_size, "Account must have at least 2 entries") if accounting_entries.size < 2
   end
   
 end

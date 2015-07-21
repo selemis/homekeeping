@@ -50,6 +50,96 @@ describe AccountingEntry do
       expect(entry.account).to eq account
     end
 
+    it 'is credit accounting entry if it belongs to an Assets account and the amount is negative' do
+      account = Account.new(name: 'Cash', category: 'Assets')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
+      entry.account = account
+
+      expect(entry.credit?).to be_true
+      expect(entry.debit?).to be_false
+    end
+
+    it 'is debit accounting entry if it belongs to an Assets account and the amount is positive' do
+      account = Account.new(name: 'Cash', category: 'Assets')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
+      entry.account = account
+
+      expect(entry.credit?).to be_false
+      expect(entry.debit?).to be_true
+    end
+
+    it 'is credit accounting entry if it belongs to an Expenses account and the amount is negative' do
+      account = Account.new(name: 'Groceries', category: 'Expenses')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
+      entry.account = account
+
+      expect(entry.credit?).to be_true
+      expect(entry.debit?).to be_false
+    end
+    
+    it 'is debit accounting entry if it belongs to an Expenses account and the amount is positive' do
+      account = Account.new(name: 'Groceries', category: 'Expenses')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
+      entry.account = account
+
+      expect(entry.credit?).to be_false
+      expect(entry.debit?).to be_true
+    end
+
+    it 'is credit accounting entry if it belongs to an Liabilities account and the amount is positive' do
+      account = Account.new(name: 'Bank Loan', category: 'Liabilities')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
+      entry.account = account
+
+      expect(entry.credit?).to be_true
+      expect(entry.debit?).to be_false
+    end
+
+    it 'is debit accounting entry if it belongs to an Liabilities account and the amount is negative' do
+      account = Account.new(name: 'Bank Loan', category: 'Liabilities')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
+      entry.account = account
+
+      expect(entry.credit?).to be_false
+      expect(entry.debit?).to be_true
+    end
+
+    it 'is credit accounting entry if it belongs to an Equity account and the amount is positive' do
+      account = Account.new(name: 'Parents', category: 'Equity')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
+      entry.account = account
+
+      expect(entry.credit?).to be_true
+      expect(entry.debit?).to be_false
+    end
+
+    it 'is debit accounting entry if it belongs to an Equity account and the amount is negative' do
+      account = Account.new(name: 'Parents', category: 'Equity')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
+      entry.account = account
+
+      expect(entry.credit?).to be_false
+      expect(entry.debit?).to be_true
+    end
+
+    it 'is credit accounting entry if it belongs to a Revenue account and the amount is positive' do
+      account = Account.new(name: 'Salary', category: 'Revenue')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
+      entry.account = account
+
+      expect(entry.credit?).to be_true
+      expect(entry.debit?).to be_false
+    end
+
+    it 'is debit accounting entry if it belongs to an Revenue account and the amount is negative' do
+      account = Account.new(name: 'Salary', category: 'Revenue')
+      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
+      entry.account = account
+
+      expect(entry.credit?).to be_false
+      expect(entry.debit?).to be_true
+    end
+
   end
 
 end
