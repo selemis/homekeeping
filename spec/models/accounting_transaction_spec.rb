@@ -96,7 +96,6 @@ describe AccountingTransaction do
         @transaction.valid?
 
         expect(@transaction.errors[:credits_debits].any?).to be_false
-        #expect(transaction.accounting_entries.map{|entry| entry.amount}.reduce(:+)).to eq 0
       end
 
       it 'is not valid if the accounting entries amounts do not sum up to 0' do
@@ -110,9 +109,6 @@ describe AccountingTransaction do
       end
 
     end
-
-
-
 
     it 'the transaction book date must be the same as the booking dates of all its entries'
   

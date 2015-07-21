@@ -22,8 +22,6 @@ describe 'placing an accounting transaction' do
 
     it 'credits the salary account with an amount and debits the cash account with the same amount' do
       #TODO remember booking date
-      @transaction.place
-
       assert_transaction_placement({
            credit_account: @salary, 
            debit_account: @cash, 
@@ -31,12 +29,10 @@ describe 'placing an accounting transaction' do
            debit: 100
       })
 
-      puts @transaction.accounting_entries.map{|entry| entry.amount}
       expect(@transaction.valid?).to be_true
     end
 
     it 'commiting the transaction saves the accounting entries to the database' do
-      @transaction.place
       @transaction.save
 
       assert_account_from_db @cash
@@ -58,8 +54,6 @@ describe 'placing an accounting transaction' do
     end
     
     it 'debits the salary account with an amount and credits the savings account with the same amount' do
-      @transaction.place
-
       assert_transaction_placement({
            credit_account: @savings_account, 
            debit_account: @cash, 
@@ -70,7 +64,6 @@ describe 'placing an accounting transaction' do
     end
 
     it 'commiting the transaction saves the accounting entries to the database' do
-      @transaction.place
       @transaction.save
 
       assert_account_from_db @cash
@@ -93,8 +86,6 @@ describe 'placing an accounting transaction' do
 
 
     it 'credits the cash account and debits the groceries account with the same amount' do
-      @transaction.place
-
       assert_transaction_placement({
         credit_account: @cash, 
         debit_account: @groceries, 
@@ -104,7 +95,6 @@ describe 'placing an accounting transaction' do
     end
 
     it 'commiting the transaction saves the accounting entries to the database' do
-      @transaction.place
       @transaction.save
 
       assert_account_from_db @cash
