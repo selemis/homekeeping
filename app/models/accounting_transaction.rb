@@ -15,8 +15,11 @@ class AccountingTransaction < ActiveRecord::Base
   private
 
   def credits_equals_debits?
-    accounting_entries.select{|entry| entry.debit?}.map{|entry| entry.amount.abs}.reduce(:+) ==
-    accounting_entries.select{|entry| entry.credit?}.map{|entry| entry.amount.abs}.reduce(:+)
+    sum_entry_amounts {|entry| entry.debit?} == sum_entry_amounts {|entry| entry.credit?} 
+  end
+
+  def sum_entry_amounts
+    accounting_entries.select{|entry| yield(entry) }.map{|entry| entry.amount.abs}.reduce(:+)
   end
 
   def double_check_credits_debits

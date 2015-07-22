@@ -1,6 +1,6 @@
 class Account < ActiveRecord::Base
 
-  CATEGORIES = %w[Assets Liabilities Equity Revenue Expenses]
+  CATEGORIES = [Assets.name, Liabilities.name, Equity.name, Revenue.name, Expenses.name]
 
   has_many :accounting_entries
   validates :name, presence: true
@@ -83,14 +83,16 @@ class Account < ActiveRecord::Base
 
   #duplicated fix later
   def amount_sign_for_debit
-    case category
-      when 'Assets', 'Expenses'
-        1
-      when 'Liabilities', 'Equity', 'Revenue'
-        -1
-      else
-        1
-    end
+    category_object = Object.const_get(category).new
+    category_object.amount_sign_for_debit
+    #case category
+      #when 'Assets', 'Expenses'
+        #1
+      #when 'Liabilities', 'Equity', 'Revenue'
+        #-1
+      #else
+        #1
+    #end
   end
 
   #duplicated fix later

@@ -81,15 +81,13 @@ describe AccountingTransaction do
       before do
         @transaction = AccountingTransaction.new
         @transaction.book_date = Date.today
-        credit_entry = AccountingEntry.new(book_date: Date.today, amount: -100)
         savings_account = Account.new(name: 'Savings Account', category: 'Assets')
+        credit_entry = AccountingEntry.new(book_date: Date.today, amount: -100)
         credit_entry.account = savings_account
-
         @cash = Account.new(name: 'Cash', category: 'Assets')
         debit_entry = AccountingEntry.new(book_date: Date.today, amount: 100)
         debit_entry.account = @cash
-        @transaction.accounting_entries << credit_entry
-        @transaction.accounting_entries << debit_entry
+        @transaction.accounting_entries << credit_entry << debit_entry
       end
 
       it 'requires the credits to be equal to debits' do
@@ -98,7 +96,7 @@ describe AccountingTransaction do
         expect(@transaction.errors[:credits_debits].any?).to be_false
       end
 
-      it 'is not valid if the accounting entries amounts do not sum up to 0' do
+      it 'is not valid if the credits do not equal to debits' do
         entry = AccountingEntry.new(book_date: Date.today, amount: -10)
         entry.account = @cash
         @transaction.accounting_entries << entry

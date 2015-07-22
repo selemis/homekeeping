@@ -19,6 +19,8 @@ describe Account do
     end
 
     it 'is valid with example attributes' do
+      @account.valid?
+      puts @account.errors.full_messages
       expect(@account.valid?).to be_true
     end
 
