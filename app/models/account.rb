@@ -22,15 +22,13 @@ class Account < ActiveRecord::Base
   #TODO change date
   #TODO remember to save
   def credit(amount)
-    amount_with_sign = amount_sign_for_credit * amount
-    entry = AccountingEntry.new(book_date: Date.today, amount: amount_with_sign)
+    entry = AccountingEntry.new(book_date: Date.today, amount: amount_sign_for_credit * amount)
     accounting_entries << entry
     entry
   end
 
   def debit(amount)
-    amount_with_sign = amount_sign_for_debit * amount
-    entry = AccountingEntry.new(book_date: Date.today, amount: amount_with_sign)
+    entry = AccountingEntry.new(book_date: Date.today, amount: amount_sign_for_debit * amount)
     accounting_entries << entry
     entry
   end
