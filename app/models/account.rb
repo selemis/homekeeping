@@ -7,8 +7,7 @@ class Account < ActiveRecord::Base
   validates :category, inclusion: {in: CATEGORIES}
 
   def balance(until_date=nil)
-    return 0 if accounting_entries.empty?
-    sum_amounts_of(filtered_entries(date_filter(until_date)))
+    for_non_empty_entries { sum_amounts_of(filtered_entries(date_filter(until_date))) }
   end
 
   def calculate_debit(until_date=nil)
@@ -22,25 +21,31 @@ class Account < ActiveRecord::Base
   #TODO change date
   #TODO remember to save
   def credit(amount)
-    entry = AccountingEntry.new(book_date: Date.today, amount: amount_sign_for_credit * amount)
-    accounting_entries << entry
-    entry
+    transaction_with_sign(amount) { amount_sign_for_credit }
   end
 
   def debit(amount)
-    entry = AccountingEntry.new(book_date: Date.today, amount: amount_sign_for_debit * amount)
-    accounting_entries << entry
-    entry
+    transaction_with_sign(amount) { amount_sign_for_debit }
   end
 
   private
 
+  def transaction_with_sign(amount)
+    entry = AccountingEntry.new(book_date: Date.today, amount: yield * amount)
+    accounting_entries << entry
+    entry
+  end
+
   def process(until_date)
-    return 0 if accounting_entries.empty?
-    #filter = date_filter(until_date)
-    summing_block = eval yield, binding
-    #summing_block.call(filter)
-    summing_block.call(date_filter(until_date))
+    for_non_empty_entries do
+      summing_block = eval yield, binding
+      summing_block.call(date_filter(until_date))
+    end
+  end
+
+  def for_non_empty_entries(entries=nil)
+    return 0 if (entries ||= accounting_entries).empty?
+    yield
   end
 
   def sum_negative_filtered_entries
@@ -52,8 +57,7 @@ class Account < ActiveRecord::Base
   end
 
   def sum_amounts_of(entries)
-    return 0 if entries.empty?
-    entries.map { |entry| entry.amount }.reduce(:+)
+    for_non_empty_entries(entries) { entries.map { |entry| entry.amount }.reduce(:+) }
   end
 
   def positive_entries_of(entries)
@@ -80,7 +84,6 @@ class Account < ActiveRecord::Base
     category_object.amount_sign_for_debit
   end
 
-  #duplicated fix later
   def amount_sign_for_credit
     -1 * amount_sign_for_debit
   end
