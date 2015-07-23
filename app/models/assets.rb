@@ -12,4 +12,20 @@ class Assets
     "sum_negative_filtered_entries"
   end
 
+  def negative_amount_credit
+    true
+  end
+
+  def positive_amount_credit
+    false
+  end
+
+  def negative_amount_debit
+    false
+  end
+
+  def positive_amount_debit
+    true
+  end
+
 end

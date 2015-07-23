@@ -5,13 +5,20 @@ class AccountingEntry < ActiveRecord::Base
   belongs_to :accounting_transaction
 
   def credit?
-    (%w[Assets Expenses].include?(account.category) and amount < 0) or 
-    (%w[Liabilities Equity Revenue].include?(account.category) and amount > 0)
+    (category_object.negative_amount_credit and amount < 0) or
+    (category_object.positive_amount_credit and amount > 0)
   end
 
   def debit?
-    (%w[Assets Expenses].include?(account.category) and amount > 0) or
-    (%w[Liabilities Equity Revenue].include?(account.category) and amount < 0)
+    (category_object.positive_amount_debit and amount > 0) or
+    (category_object.negative_amount_debit and amount < 0)
+  end
+
+  private 
+
+  #duplicated
+  def category_object
+    Object.const_get(account.category).new
   end
 
 end
