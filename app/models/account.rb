@@ -12,11 +12,11 @@ class Account < ActiveRecord::Base
   end
 
   def calculate_debit(until_date=nil)
-    process(until_date, sum_positive_filtered_entries, sum_negative_filtered_entries)
+    process(until_date) { category_object.calculate_debit }
   end
 
   def calculate_credit(until_date=nil)
-    process(until_date, sum_negative_filtered_entries, sum_positive_filtered_entries)
+    process(until_date) { category_object.calculate_credit }
   end
 
   #TODO change date
@@ -35,17 +35,12 @@ class Account < ActiveRecord::Base
 
   private
 
-  def process(until_date, handle_assets_and_expenses, handle_liabilitites_equity_and_revenue)
+  def process(until_date)
     return 0 if accounting_entries.empty?
-    filter = date_filter(until_date)
-    case category
-      when 'Assets', 'Expenses'
-        handle_assets_and_expenses.call(filter)
-      when 'Liabilities', 'Equity', 'Revenue'
-        handle_liabilitites_equity_and_revenue.call(filter)
-      else
-        0
-    end
+    #filter = date_filter(until_date)
+    summing_block = eval yield, binding
+    #summing_block.call(filter)
+    summing_block.call(date_filter(until_date))
   end
 
   def sum_negative_filtered_entries
@@ -81,23 +76,17 @@ class Account < ActiveRecord::Base
     end
   end
 
-  #duplicated fix later
   def amount_sign_for_debit
-    category_object = Object.const_get(category).new
     category_object.amount_sign_for_debit
-    #case category
-      #when 'Assets', 'Expenses'
-        #1
-      #when 'Liabilities', 'Equity', 'Revenue'
-        #-1
-      #else
-        #1
-    #end
   end
 
   #duplicated fix later
   def amount_sign_for_credit
     -1 * amount_sign_for_debit
+  end
+
+  def category_object
+    Object.const_get(category).new
   end
 
 end
