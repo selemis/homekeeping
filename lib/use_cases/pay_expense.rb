@@ -1,5 +1,5 @@
-require_relative 'asset_or_liabilities_validator'
-require_relative 'expenses_validator'
+require'validators/asset_or_liabilities_validator'
+require 'validators/expenses_validator'
 
 class PayExpense
 

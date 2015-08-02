@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'pay_expense'
+require 'use_cases/pay_expense'
 
 include MakePaymemntAssertable
 
