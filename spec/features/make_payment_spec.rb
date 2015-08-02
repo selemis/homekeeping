@@ -119,11 +119,37 @@ describe 'Making an expense payment' do
       expect(pay.errors[:from]).to eq ['The from account category is not Liabilities or Assets']
     end
 
-    it 'when a from account must be an Expense type'
+    it 'when a from account must be an Expense type' do
+      cash = Account.new(name: 'Cash', category: 'Assets')
+      bank = Account.new(name: 'Bank', category: 'Liabilities')
+
+      pay = PayExpense.new do |p|
+        p.from = cash
+        p.to = bank
+        p.date = Date.today
+        p.amount = 550
+      end
+
+      expect(pay.valid?).to be_false
+      expect(pay.errors[:to].any?).to be_true
+      expect(pay.errors[:to]).to eq ['The to account category is not Expenses']
+    end
 
   end
 
 
-  it 'does not save the payment if it is not valid'
+  it 'does not save the payment if it is not valid' do
+    cash = Account.new(name: 'Cash', category: 'Assets')
+    bank = Account.new(name: 'Bank', category: 'Liabilities')
+
+    pay = PayExpense.new do |p|
+      p.from = cash
+      p.to = bank
+      p.date = Date.today
+      p.amount = 550
+    end
+
+    expect{pay.save}.to raise_error(RuntimeError, 'The expense payment is not valid')
+  end
 
 end
