@@ -105,12 +105,12 @@ describe 'Making an expense payment' do
     context 'Given an invalid type of account' do
 
       before do
-        @cash = Account.new(name: 'Cash', category: 'Assets')
-        @bank = Account.new(name: 'Bank', category: 'Liabilities')
+        @salary = Account.new(name: 'Cash', category: 'Assets')
+        @accounts_payable = Account.new(name: 'Bank', category: 'Liabilities')
 
         @pay = PayExpense.new do |p|
-          p.from = @cash
-          p.to = @bank
+          p.from = @salary
+          p.to = @accounts_payable
           p.date = Date.today
           p.amount = 550
         end

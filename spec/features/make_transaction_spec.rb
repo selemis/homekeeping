@@ -29,7 +29,7 @@ describe 'placing an accounting transaction' do
         #TODO remember booking date
         assert_transaction_placement({
              credit_account: @salary, 
-             debit_account: @cash, 
+             debit_account: @cash,
              credit: 100, 
              debit: 100
         })
@@ -40,8 +40,8 @@ describe 'placing an accounting transaction' do
       it 'commiting the transaction saves the accounting entries to the database' do
         @transaction.save
   
-        assert_account_from_db @cash
         assert_account_from_db @salary
+        assert_account_from_db @cash
       end
   
     end
@@ -58,14 +58,14 @@ describe 'placing an accounting transaction' do
       it 'debits the salary account with an amount and credits the savings account with the same amount' do
         assert_transaction_placement({
              credit_account: @savings_account, 
-             debit_account: @cash, 
+             debit_account: @cash,
              credit: -100, 
              debit: 100
         })
         expect(@transaction.valid?).to be_true
       end
   
-      it 'commiting the transaction saves the accounting entries to the database' do
+      it 'committing the transaction saves the accounting entries to the database' do
         @transaction.save
   
         assert_account_from_db @cash
@@ -86,14 +86,14 @@ describe 'placing an accounting transaction' do
   
       it 'credits the cash account and debits the groceries account with the same amount' do
         assert_transaction_placement({
-          credit_account: @cash, 
+          credit_account: @cash,
           debit_account: @groceries, 
           credit: -50, 
           debit: 50
         })
       end
   
-      it 'commiting the transaction saves the accounting entries to the database' do
+      it 'committing the transaction saves the accounting entries to the database' do
         @transaction.save
   
         assert_account_from_db @cash

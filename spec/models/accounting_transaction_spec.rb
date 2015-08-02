@@ -84,9 +84,9 @@ describe AccountingTransaction do
         savings_account = Account.new(name: 'Savings Account', category: 'Assets')
         credit_entry = AccountingEntry.new(book_date: Date.today, amount: -100)
         credit_entry.account = savings_account
-        @cash = Account.new(name: 'Cash', category: 'Assets')
+        @salary = Account.new(name: 'Cash', category: 'Assets')
         debit_entry = AccountingEntry.new(book_date: Date.today, amount: 100)
-        debit_entry.account = @cash
+        debit_entry.account = @salary
         @transaction.accounting_entries << credit_entry << debit_entry
       end
 
@@ -98,7 +98,7 @@ describe AccountingTransaction do
 
       it 'is not valid if the credits do not equal to debits' do
         entry = AccountingEntry.new(book_date: Date.today, amount: -10)
-        entry.account = @cash
+        entry.account = @salary
         @transaction.accounting_entries << entry
 
         @transaction.valid?
