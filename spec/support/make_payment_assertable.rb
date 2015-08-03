@@ -1,5 +1,14 @@
 module MakePaymemntAssertable
 
+  def create_expense_payment_transaction(values)
+    pay = values[:type].new do |p|
+      p.from = values[:from_account]
+      p.to = values[:to_account]
+      p.date = Date.today
+      p.amount = values[:amount]
+    end
+  end
+
   def assert_payment(values)
     trans = values[:transaction]
     entry1 = trans.accounting_entries.select { |entry| entry.account == values[:first_account] }.first
