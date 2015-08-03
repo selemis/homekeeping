@@ -142,7 +142,7 @@ describe 'Making an expense payment' do
 
       expect(pay.valid?).to be_false
       expect(pay.errors[:from].any?).to be_true
-      expect(pay.errors[:from]).to eq ['The from account category is not Liabilities or Assets']
+      expect(pay.errors[:from]).to eq ['The from account category is not Assets or Liabilities']
     end
 
   end

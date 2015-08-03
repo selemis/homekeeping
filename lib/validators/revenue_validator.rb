@@ -1,14 +1,8 @@
+require 'validators/account_category_validation'
+
 class RevenueValidator < ActiveModel::EachValidator
+  extend AccountCategoryValidation
 
-  def validate_each(record, attribute, value)
-    unless value.nil?
-      #TODO Remove words Assets
-      category = 'Revenue'
-      unless  [category].include?(value.category)
-        record.errors[attribute] <<  "The #{attribute.to_s} account category is not #{category}"
-      end
-    end
-
-  end
+  define_validation(['Revenue'])
 
 end
