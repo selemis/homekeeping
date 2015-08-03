@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'use_cases/pay_expense'
 
-include MakePaymemntAssertable
+include MakeTransactionAssertable
 
 describe 'Making an expense payment' do
 
@@ -10,18 +10,18 @@ describe 'Making an expense payment' do
     it 'when making the payment then it creates an entry with -100 for cash and an entry with 100 for groceries' do
       cash = Account.new(name: 'Cash', category: 'Assets')
       groceries = Account.new(name: 'Groceries', category: 'Expenses')
-      pay = create_expense_payment_transaction({
-          type: PayExpense,
-          from_account: cash,
-          to_account: groceries, 
-          amount: 100})
+      pay = create_transaction_type({
+                                        type: PayExpense,
+                                        from_account: cash,
+                                        to_account: groceries,
+                                        amount: 100})
 
       pay.save
 
       assert_payment({
                          transaction: pay.transaction,
-                         first_account: cash, first_amount: -100,
-                         second_account: groceries, second_amount: 100
+                         from_account: cash, from_amount: -100,
+                         to_account: groceries, to_amount: 100
                      })
     end
 
@@ -32,19 +32,19 @@ describe 'Making an expense payment' do
     it 'when making the payment then it creates an entry with 550 for rent and an entry with -550 for bank account' do
       bank_account = Account.new(name: 'Bank', category: 'Assets')
       rent = Account.new(name: 'Rent', category: 'Expenses')
-      pay = create_expense_payment_transaction({
-          type: PayExpense,
-          from_account: bank_account, 
-          to_account: rent, 
-          amount: 550
-      })
+      pay = create_transaction_type({
+                                        type: PayExpense,
+                                        from_account: bank_account,
+                                        to_account: rent,
+                                        amount: 550
+                                    })
 
       pay.save
 
       assert_payment({
                          transaction: pay.transaction,
-                         first_account: bank_account, first_amount: -550,
-                         second_account: rent, second_amount: 550
+                         from_account: bank_account, from_amount: -550,
+                         to_account: rent, to_amount: 550
                      })
     end
 
@@ -55,19 +55,19 @@ describe 'Making an expense payment' do
     it "when making the payment then it creates an entry of 40 for 'Accounts Payable' and entry of 40 for mobile" do
       accounts_payable = Account.new(name: 'Credit card', category: 'Liabilities')
       mobile = Account.new(name: 'Wind', category: 'Expenses')
-      pay = create_expense_payment_transaction({
-          type: PayExpense,
-          from_account: accounts_payable, 
-          to_account: mobile, 
-          amount: 40
-      })
+      pay = create_transaction_type({
+                                        type: PayExpense,
+                                        from_account: accounts_payable,
+                                        to_account: mobile,
+                                        amount: 40
+                                    })
 
       pay.save
 
       assert_payment({
                          transaction: pay.transaction,
-                         first_account: accounts_payable, first_amount: 40,
-                         second_account: mobile, second_amount: 40
+                         from_account: accounts_payable, from_amount: 40,
+                         to_account: mobile, to_amount: 40
                      })
     end
 
@@ -105,12 +105,12 @@ describe 'Making an expense payment' do
       before do
         @salary = Account.new(name: 'Cash', category: 'Assets')
         @accounts_payable = Account.new(name: 'Bank', category: 'Liabilities')
-        @pay = create_expense_payment_transaction({
-          type: PayExpense,
-          from_account: @salary, 
-          to_account: @accounts_payable, 
-          amount: 550
-        })
+        @pay = create_transaction_type({
+                                           type: PayExpense,
+                                           from_account: @salary,
+                                           to_account: @accounts_payable,
+                                           amount: 550
+                                       })
       end
 
       it 'then it should not be valid because of the to account' do
@@ -128,12 +128,12 @@ describe 'Making an expense payment' do
     it "when having an expense payment with a from account of category not 'Assets' or a 'Liabilities' then it is invalid" do
       equity = Account.new(name: 'Equity', category: 'Equity')
       rent = Account.new(name: 'Rent', category: 'Expenses')
-      pay = create_expense_payment_transaction({
-        type: PayExpense,
-        from_account: equity, 
-        to_account: rent, 
-        amount: 550
-      })
+      pay = create_transaction_type({
+                                        type: PayExpense,
+                                        from_account: equity,
+                                        to_account: rent,
+                                        amount: 550
+                                    })
 
       expect(pay.valid?).to be_false
 

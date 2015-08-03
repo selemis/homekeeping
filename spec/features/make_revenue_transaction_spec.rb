@@ -1,27 +1,26 @@
 require 'spec_helper'
 require 'use_cases/make_revenue_transaction'
 
-#TODO rename
-include MakePaymemntAssertable
+include MakeTransactionAssertable
 
 describe 'Making a Revenue Transaction' do
 
   it "when a salary payment of value 1000 occurs then it creates an entry of 1000 for 'Salary' and entry of 1000 for 'Savings Account'" do
     salary = Account.new(name: 'Salary', category: 'Revenue')
     savings_account = Account.new(name: 'Savings account', category: 'Assets')
-    salary_payment = create_expense_payment_transaction({
-      type: MakeRevenueTransaction,
-      from_account: salary,
-      to_account: savings_account,
-      amount: 1000
-    })
+    salary_payment = create_transaction_type({
+                                                 type: MakeRevenueTransaction,
+                                                 from_account: salary,
+                                                 to_account: savings_account,
+                                                 amount: 1000
+                                             })
 
     salary_payment.save
 
     assert_payment({
                        transaction: salary_payment.transaction,
-                       first_account: salary, first_amount: 1000,
-                       second_account: savings_account, second_amount: 1000
+                       from_account: salary, from_amount: 1000,
+                       to_account: savings_account, to_amount: 1000
                    })
   end
 
@@ -55,12 +54,12 @@ describe 'Making a Revenue Transaction' do
     before do
       @salary = Account.new(name: 'Salary', category: 'Revenue')
       @accounts_payable = Account.new(name: 'Accounts Payable', category: 'Liabilities')
-      @salary_payment = create_expense_payment_transaction({
-        type: MakeRevenueTransaction,
-        from_account: @salary,
-        to_account: @accounts_payable,
-        amount: 1000
-      })
+      @salary_payment = create_transaction_type({
+                                                    type: MakeRevenueTransaction,
+                                                    from_account: @salary,
+                                                    to_account: @accounts_payable,
+                                                    amount: 1000
+                                                })
     end
 
     it 'when checking validation an error occurs for to account' do
@@ -78,12 +77,12 @@ describe 'Making a Revenue Transaction' do
   it "when revenue transaction with a from account category not 'Revenue' is checked for validation, then there are validation errors for the from account" do
     accounts_payable = Account.new(name: 'Accounts Payable', category: 'Liabilities')
     savings_account = Account.new(name: 'Savings account', category: 'Assets')
-    salary_payment = create_expense_payment_transaction({
-      type: MakeRevenueTransaction,
-      from_account: accounts_payable,
-      to_account: savings_account,
-      amount: 1000
-    })
+    salary_payment = create_transaction_type({
+                                                 type: MakeRevenueTransaction,
+                                                 from_account: accounts_payable,
+                                                 to_account: savings_account,
+                                                 amount: 1000
+                                             })
 
     expect(salary_payment.valid?).to be_false
 
