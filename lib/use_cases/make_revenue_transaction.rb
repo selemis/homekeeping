@@ -12,7 +12,6 @@ class MakeRevenueTransaction
   validates :from, revenue: true
   validates :to, asset: true
 
-
   def initialize
     yield self if block_given?
   end
