@@ -12,6 +12,7 @@ describe 'Making an expense payment' do
       groceries = Account.new(name: 'Groceries', category: 'Expenses')
       pay = create_transaction_type({
                                         type: PayExpense,
+                                        book_date: Date.today,
                                         from_account: cash,
                                         to_account: groceries,
                                         amount: 100})
@@ -34,6 +35,7 @@ describe 'Making an expense payment' do
       rent = Account.new(name: 'Rent', category: 'Expenses')
       pay = create_transaction_type({
                                         type: PayExpense,
+                                        book_date: Date.today,
                                         from_account: bank_account,
                                         to_account: rent,
                                         amount: 550
@@ -57,6 +59,7 @@ describe 'Making an expense payment' do
       mobile = Account.new(name: 'Wind', category: 'Expenses')
       pay = create_transaction_type({
                                         type: PayExpense,
+                                        book_date: Date.today,
                                         from_account: accounts_payable,
                                         to_account: mobile,
                                         amount: 40

@@ -4,11 +4,12 @@ module MakeTransactionAssertable
     values[:type].new do |tt|
       tt.from = values[:from_account]
       tt.to = values[:to_account]
-      tt.date = Date.today
+      tt.date = values[:book_date]
       tt.amount = values[:amount]
     end
   end
 
+  #TODO rename
   def assert_payment(values)
     trans = values[:transaction]
     entry1 = trans.accounting_entries.select { |entry| entry.account == values[:from_account] }.first

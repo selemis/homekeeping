@@ -10,6 +10,7 @@ describe 'Making a Revenue Transaction' do
     savings_account = Account.new(name: 'Savings account', category: 'Assets')
     salary_payment = create_transaction_type({
                                                  type: MakeRevenueTransaction,
+                                                 book_date: Date.today,
                                                  from_account: salary,
                                                  to_account: savings_account,
                                                  amount: 1000
@@ -19,6 +20,7 @@ describe 'Making a Revenue Transaction' do
 
     assert_payment({
                        transaction: salary_payment.transaction,
+                       book_date: Date.today,
                        from_account: salary, from_amount: 1000,
                        to_account: savings_account, to_amount: 1000
                    })
