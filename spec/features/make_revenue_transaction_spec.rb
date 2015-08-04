@@ -31,35 +31,33 @@ describe 'Making a Revenue Transaction' do
 
   context "Given an a revenue transaction with a to account category not 'Assets'" do
 
-    before do
-      @salary = Account.new(name: 'Salary', category: 'Revenue')
-      @accounts_payable = Account.new(name: 'Accounts Payable', category: 'Liabilities')
-      @salary_payment = create_transaction_type({
-                                                    type: MakeRevenueTransaction,
-                                                    from_account: @salary,
-                                                    to_account: @accounts_payable,
-                                                    amount: 1000
-                                                })
-    end
+    from_account_invalid_category({
+                                      message: "when revenue transaction with a from account category not 'Revenue' is checked for validation, then there are validation errors for the from account",
+                                      transaction_maker: MakeRevenueTransaction,
+                                      from_account_category: 'Liabilities',
+                                      to_account_category: 'Assets',
+                                      error_message: 'The from account category is not Revenue'
+                                  })
 
-    it 'when checking validation an error occurs for to account' do
-      expect(@salary_payment.valid?).to be_false
-      expect(@salary_payment.errors[:to].any?).to be_true
-      expect(@salary_payment.errors[:to]).to eq ['The to account category is not Assets']
-    end
-
+    to_account_invalid_category({
+                                    message: 'when checking validation an error occurs for to account',
+                                    transaction_maker: MakeRevenueTransaction,
+                                    from_account_category: 'Revenue',
+                                    to_account_category: 'Liabilities',
+                                    error_message: 'The to account category is not Assets'
+                                })
+    
     it 'when saving the transaction then it raises an exception' do
-      expect { @salary_payment.save }.to raise_error(RuntimeError, 'The revenue transaction is not valid')
+      salary_payment = create_transaction_maker({
+                                                    transaction_maker: MakeRevenueTransaction,
+                                                    from_account_category: 'Revenue',
+                                                    to_account_category: 'Liabilities',
+                                                })
+
+      expect { salary_payment.save }.to raise_error(RuntimeError, 'The revenue transaction is not valid')
     end
 
   end
 
-  from_account_invalid_category({
-                                    message: "when revenue transaction with a from account category not 'Revenue' is checked for validation, then there are validation errors for the from account",
-                                    transaction_maker: MakeRevenueTransaction,
-                                    from_account_category: 'Liabilities',
-                                    to_account_category: 'Assets',
-                                    error_message: 'The from account category is not Revenue'
-                                })
 
 end

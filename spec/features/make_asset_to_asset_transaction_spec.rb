@@ -21,11 +21,11 @@ describe "Making an 'Assets' to 'Assets' transaction " do
     deposit.save
 
     assert_transaction({
-                       transaction: deposit.transaction,
-                       book_date: Date.today,
-                       from_account: cash, from_amount: -1000,
-                       to_account: savings_account, to_amount: 1000
-                   })
+                           transaction: deposit.transaction,
+                           book_date: Date.today,
+                           from_account: cash, from_amount: -1000,
+                           to_account: savings_account, to_amount: 1000
+                       })
 
   end
 
@@ -33,46 +33,32 @@ describe "Making an 'Assets' to 'Assets' transaction " do
 
   context "given an 'Assets' to 'Assets' transaction with a from category not 'Assets' " do
 
-    before do
-      credit_card = Account.new(name: 'Credit Card', category: 'Liabilities')
-      savings_account = Account.new(name: 'Savings Account', category: 'Assets')
-
-      @deposit = create_transaction_type({
-                                             type: AssetToAssetTransaction,
-                                             book_date: Date.today,
-                                             from_account: credit_card,
-                                             to_account: savings_account,
-                                             amount: 1000
-                                         })
-
-    end
-
-    it  'when checking for validation then an error occurs for the from account' do
-      expect(@deposit.valid?).to be_false
-      expect(@deposit.errors[:from].any?).to be_true
-      expect(@deposit.errors[:from]).to eq ['The from account category is not Assets']
-    end
+    from_account_invalid_category({
+                                      message: 'when checking for validation then an error occurs for the from account',
+                                      transaction_maker: AssetToAssetTransaction,
+                                      from_account_category: 'Liabilities',
+                                      to_account_category: 'Assets',
+                                      error_message: 'The from account category is not Assets'
+                                  })
 
     it 'when saving the transaction then it raises an exception' do
-      expect { @deposit.save }.to raise_error(RuntimeError, 'The asset transaction is not valid')
+      deposit = create_transaction_maker ({
+                                        transaction_maker: AssetToAssetTransaction,
+                                        from_account_category: 'Liabilities',
+                                        to_account_category: 'Assets',
+                                    })
+
+      expect { deposit.save }.to raise_error(RuntimeError, 'The asset transaction is not valid')
     end
 
   end
 
-  it "given 'Assets' to 'Assets' transaction with a to account category not 'Assets' when checking for validation then an errors occurs for the to account" do
-    savings_account = Account.new(name: 'Savings Account', category: 'Assets')
-    credit_card = Account.new(name: 'Credit Card', category: 'Liabilities')
-
-    deposit = create_transaction_type({
-                                           type: AssetToAssetTransaction,
-                                           book_date: Date.today,
-                                           from_account: savings_account,
-                                           to_account: credit_card,
-                                           amount: 1000
-                                       })
-    expect(deposit.valid?).to be_false
-    expect(deposit.errors[:to].any?).to be_true
-    expect(deposit.errors[:to]).to eq ['The to account category is not Assets']
-  end
+  to_account_invalid_category({
+                                  message: "given 'Assets' to 'Assets' transaction with a to account category not 'Assets' when checking for validation then an errors occurs for the to account",
+                                  transaction_maker: AssetToAssetTransaction,
+                                  from_account_category: 'Assets',
+                                  to_account_category: 'Liabilities',
+                                  error_message: 'The to account category is not Assets'
+                              })
 
 end
