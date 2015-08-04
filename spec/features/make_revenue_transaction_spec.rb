@@ -18,7 +18,7 @@ describe 'Making a Revenue Transaction' do
 
     salary_payment.save
 
-    assert_payment({
+    assert_transaction({
                        transaction: salary_payment.transaction,
                        book_date: Date.today,
                        from_account: salary, from_amount: 1000,
@@ -26,30 +26,8 @@ describe 'Making a Revenue Transaction' do
                    })
   end
 
-  context 'Given a new revenue transaction, when checking for validation' do
-
-    before do
-      @pay = MakeRevenueTransaction.new
-      @pay.valid?
-    end
-
-    it 'then it requires a book date' do
-      expect(@pay.errors[:date].any?).to be_true
-    end
-
-    it 'then it requires a from account' do
-      expect(@pay.errors[:from].any?).to be_true
-    end
-
-    it 'then it requires a to account' do
-      expect(@pay.errors[:to].any?).to be_true
-    end
-
-    it 'then it requires an amount' do
-      expect(@pay.errors[:amount].any?).to be_true
-    end
-
-  end
+  
+  basic_validation('Given a new revenue transaction, when checking for validation', MakeRevenueTransaction)
 
   context "Given an a revenue transaction with a to account category not 'Assets'" do
 

@@ -19,7 +19,7 @@ describe 'Making an expense payment' do
 
       pay.save
 
-      assert_payment({
+      assert_transaction({
                          transaction: pay.transaction,
                          from_account: cash, from_amount: -100,
                          to_account: groceries, to_amount: 100
@@ -43,7 +43,7 @@ describe 'Making an expense payment' do
 
       pay.save
 
-      assert_payment({
+      assert_transaction({
                          transaction: pay.transaction,
                          from_account: bank_account, from_amount: -550,
                          to_account: rent, to_amount: 550
@@ -67,7 +67,7 @@ describe 'Making an expense payment' do
 
       pay.save
 
-      assert_payment({
+      assert_transaction({
                          transaction: pay.transaction,
                          from_account: accounts_payable, from_amount: 40,
                          to_account: mobile, to_amount: 40
@@ -78,30 +78,7 @@ describe 'Making an expense payment' do
 
   context 'Given an expense payment' do
 
-    context 'when it is initialized and checked for validation' do
-
-      before do
-        @pay = PayExpense.new
-        @pay.valid?
-      end
-
-      it 'then it requires a book date' do
-        expect(@pay.errors[:date].any?).to be_true
-      end
-
-      it 'then it requires a from account' do
-        expect(@pay.errors[:from].any?).to be_true
-      end
-
-      it 'then it requires a to account' do
-        expect(@pay.errors[:to].any?).to be_true
-      end
-
-      it 'then it requires an amount' do
-        expect(@pay.errors[:amount].any?).to be_true
-      end
-
-    end
+    basic_validation('when it is initialized and checked for validation', PayExpense)
 
     context 'Given an expense payment with a to account of category not Expenses' do
 

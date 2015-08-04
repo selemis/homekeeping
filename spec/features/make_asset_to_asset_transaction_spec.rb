@@ -20,7 +20,7 @@ describe "Making an 'Assets' to 'Assets' transaction " do
 
     deposit.save
 
-    assert_payment({
+    assert_transaction({
                        transaction: deposit.transaction,
                        book_date: Date.today,
                        from_account: cash, from_amount: -1000,
@@ -29,30 +29,7 @@ describe "Making an 'Assets' to 'Assets' transaction " do
 
   end
 
-  context "Given a new 'Assets' to 'Assets' transaction, when checking for validation" do
-
-    before do
-      @make_trans = AssetToAssetTransaction.new
-      @make_trans.valid?
-    end
-
-    it 'then it requires a book date' do
-      expect(@make_trans.errors[:date].any?).to be_true
-    end
-
-    it 'then it requires a from account' do
-      expect(@make_trans.errors[:from].any?).to be_true
-    end
-
-    it 'then it requires a to account' do
-      expect(@make_trans.errors[:to].any?).to be_true
-    end
-
-    it 'then it requires an amount' do
-      expect(@make_trans.errors[:amount].any?).to be_true
-    end
-
-  end
+  basic_validation("Given a new 'Assets' to 'Assets' transaction, when checking for validation", AssetToAssetTransaction)
 
   context "given an 'Assets' to 'Assets' transaction with a from category not 'Assets' " do
 
