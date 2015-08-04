@@ -18,20 +18,18 @@ class Account < ActiveRecord::Base
     process(until_date) { category_object.calculate_credit }
   end
 
-  #TODO change date
-  #TODO remember to save
-  def credit(amount)
-    transaction_with_sign(amount) { amount_sign_for_credit }
+  def credit(amount, book_date)
+    transaction_with_sign(amount, book_date) { amount_sign_for_credit }
   end
 
-  def debit(amount)
-    transaction_with_sign(amount) { amount_sign_for_debit }
+  def debit(amount, book_date)
+    transaction_with_sign(amount, book_date) { amount_sign_for_debit }
   end
 
   private
 
-  def transaction_with_sign(amount)
-    entry = AccountingEntry.new(book_date: Date.today, amount: yield * amount)
+  def transaction_with_sign(amount, book_date)
+    entry = AccountingEntry.new(book_date: book_date, amount: yield * amount)
     accounting_entries << entry
     entry
   end

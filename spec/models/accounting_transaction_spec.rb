@@ -108,7 +108,23 @@ describe AccountingTransaction do
 
     end
 
-    it 'the transaction book date must be the same as the booking dates of all its entries'
+    it 'the transaction book date must be the same as the booking dates of all its entries' do
+      #TODO I am sure that refactoring can be done
+      #TODO rethink spec descriptions
+
+      @transaction = AccountingTransaction.new
+      @transaction.book_date = Date.today
+      savings_account = Account.new(name: 'Savings Account', category: 'Assets')
+      credit_entry = AccountingEntry.new(book_date: Date.today, amount: -100)
+      credit_entry.account = savings_account
+      @salary = Account.new(name: 'Cash', category: 'Assets')
+      debit_entry = AccountingEntry.new(book_date: Date.parse('2015-01-01'), amount: 100)
+      debit_entry.account = @salary
+      @transaction.accounting_entries << credit_entry << debit_entry
+
+      expect(@transaction.valid?).to be_false
+      expect(@transaction.errors[:entries_book_date].any?).to be_true
+    end
   
   end
 

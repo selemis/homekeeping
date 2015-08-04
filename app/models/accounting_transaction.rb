@@ -1,15 +1,15 @@
 class AccountingTransaction < ActiveRecord::Base
 
   has_many :accounting_entries
-  validate :double_check_credits_debits, :at_least_2_entries
+  validate :double_check_credits_debits, :at_least_2_entries, :same_entries_book_dates
   validates :book_date, presence: true
 
   def credit(account, amount)
-    accounting_entries << account.credit(amount)
+    accounting_entries << account.credit(amount, book_date)
   end
 
   def debit(account, amount)
-    accounting_entries << account.debit(amount)
+    accounting_entries << account.debit(amount, book_date)
   end
 
   private
@@ -28,6 +28,12 @@ class AccountingTransaction < ActiveRecord::Base
 
   def at_least_2_entries
     errors.add(:accounting_entries_size, "Account must have at least 2 entries") if accounting_entries.size < 2
+  end
+
+  def same_entries_book_dates
+    if accounting_entries.reject {|entry| entry.book_date == book_date}.size > 0
+      errors.add(:entries_book_date, 'Accounting entries and transaction do not have the same book dates')
+    end
   end
   
 end

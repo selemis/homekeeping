@@ -13,6 +13,7 @@ class MakeAccountingTransaction
   def save
     if valid?
       @transaction = AccountingTransaction.new
+      puts "DATE: #{date}"
       @transaction.book_date = date
       @transaction.credit(from, amount)
       @transaction.debit(to, amount)
