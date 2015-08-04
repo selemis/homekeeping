@@ -54,20 +54,12 @@ describe 'Making a Revenue Transaction' do
 
   end
 
-  it "when revenue transaction with a from account category not 'Revenue' is checked for validation, then there are validation errors for the from account" do
-    accounts_payable = Account.new(name: 'Accounts Payable', category: 'Liabilities')
-    savings_account = Account.new(name: 'Savings account', category: 'Assets')
-    salary_payment = create_transaction_type({
-                                                 type: MakeRevenueTransaction,
-                                                 from_account: accounts_payable,
-                                                 to_account: savings_account,
-                                                 amount: 1000
-                                             })
-
-    expect(salary_payment.valid?).to be_false
-
-    expect(salary_payment.errors[:from].any?).to be_true
-    expect(salary_payment.errors[:from]).to eq ['The from account category is not Revenue']
-  end
+  from_account_invalid_category({
+                                    message: "when revenue transaction with a from account category not 'Revenue' is checked for validation, then there are validation errors for the from account",
+                                    transaction_maker: MakeRevenueTransaction,
+                                    from_account_category: 'Liabilities',
+                                    to_account_category: 'Assets',
+                                    error_message: 'The from account category is not Revenue'
+                                })
 
 end

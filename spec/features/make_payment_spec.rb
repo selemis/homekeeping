@@ -76,9 +76,10 @@ describe 'Making an expense payment' do
 
   end
 
+  basic_validation('when it is initialized and checked for validation', PayExpense)
+
   context 'Given an expense payment' do
 
-    basic_validation('when it is initialized and checked for validation', PayExpense)
 
     context 'Given an expense payment with a to account of category not Expenses' do
 
@@ -105,21 +106,13 @@ describe 'Making an expense payment' do
 
     end
 
-    it "when having an expense payment with a from account of category not 'Assets' or a 'Liabilities' then it is invalid" do
-      equity = Account.new(name: 'Equity', category: 'Equity')
-      rent = Account.new(name: 'Rent', category: 'Expenses')
-      pay = create_transaction_type({
-                                        type: PayExpense,
-                                        from_account: equity,
-                                        to_account: rent,
-                                        amount: 550
-                                    })
-
-      expect(pay.valid?).to be_false
-
-      expect(pay.errors[:from].any?).to be_true
-      expect(pay.errors[:from]).to eq ['The from account category is not Assets or Liabilities']
-    end
+    from_account_invalid_category({
+                                      message: "when having an expense payment with a from account of category not 'Assets' or a 'Liabilities' then it is invalid",
+                                      transaction_maker: PayExpense,
+                                      from_account_category: 'Equity',
+                                      to_account_category: 'Expenses',
+                                      error_message: 'The from account category is not Assets or Liabilities'
+                                  })
 
   end
 

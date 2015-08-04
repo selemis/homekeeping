@@ -49,5 +49,27 @@ module MakeTransactionAssertable
 
   end
 
+  def from_account_invalid_category(values)
+
+    it values[:message] do
+      from_account = Account.new(name: 'From Account', category: values[:from_account_category])
+      to_account = Account.new(name: 'To Account', category: values[:to_account_category])
+      transaction_maker = create_transaction_type({
+                                        type: values[:transaction_maker],
+                                        from_account: from_account,
+                                        to_account: to_account,
+                                        amount: 550,
+                                        book_date: Date.today
+                                    })
+
+      expect(transaction_maker.valid?).to be_false
+
+      expect(transaction_maker.errors[:from].any?).to be_true
+      expect(transaction_maker.errors[:from]).to eq [values[:error_message]]
+    end
+
+  end
+
+
 
 end
