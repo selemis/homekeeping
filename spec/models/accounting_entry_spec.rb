@@ -1,145 +1,127 @@
 require 'spec_helper'
 
+def entry_with_amount_and_account_with_category(amount, category)
+  account = Account.new(account_attributes(category: category))
+  entry = AccountingEntry.new(accounting_entry_attributes(amount: amount))
+  entry.account = account
+  entry
+end
+
 describe AccountingEntry do
 
-  require 'spec_helper'
+  context 'given an new accounting entry' do
 
-  describe AccountingEntry do
+    before do
+      @accounting_entry = AccountingEntry.new(accounting_entry_attributes)
+    end
 
-    context 'having a valid accounting entry' do
+    it 'has a booking date' do
+      expect(@accounting_entry.book_date).to eq accounting_entry_attributes[:book_date]
+    end
 
-      before do
-        @accounting_entry = AccountingEntry.new(accounting_entry_attributes)
-      end
+    it 'has an amount' do
+      expect(@accounting_entry.amount).to eq accounting_entry_attributes[:amount]
+    end
 
-      it 'has a booking date' do
-        expect(@accounting_entry.book_date).to eq accounting_entry_attributes[:book_date]
-      end
+    it 'is valid with example attributes' do
+      expect(@accounting_entry.valid?).to eq true
+    end
 
-      it 'has an amount' do
-        expect(@accounting_entry.amount).to eq accounting_entry_attributes[:amount]
-      end
+    it 'can belong to an account' do
+      account = Account.new(account_attributes)
+      account.accounting_entries << @accounting_entry
 
-      it 'is valid with example attributes' do
-        expect(@accounting_entry.valid?).to eq true
-      end
+      expect(@accounting_entry.account).to eq account
+    end
 
+  end
+
+  context 'given a new accounting entry, when checking for validation' do
+
+    before do
+      @accounting_entry = AccountingEntry.new
+
+      @accounting_entry.valid?
     end
 
     it 'it requires a booking date' do
-      accounting_entry = AccountingEntry.new
-
-      accounting_entry.valid?
-
-      expect(accounting_entry.errors[:book_date].any?).to eq(true)
+      expect(@accounting_entry.errors[:book_date].any?).to eq(true)
     end
 
     it 'is requires an amount' do
-      accounting_entry = AccountingEntry.new
-
-      accounting_entry.valid?
-
-      expect(accounting_entry.errors[:amount].any?).to eq(true)
-    end
-    
-    it 'can belong to an account' do
-      account = Account.new(account_attributes)
-      entry = AccountingEntry.new(accounting_entry_attributes)
-      account.accounting_entries << entry
-
-      expect(entry.account).to eq account
+      expect(@accounting_entry.errors[:amount].any?).to eq(true)
     end
 
-    it 'is credit accounting entry if it belongs to an Assets account and the amount is negative' do
-      account = Account.new(name: 'Cash', category: 'Assets')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
-      entry.account = account
+  end
 
-      expect(entry.credit?).to be_true
-      expect(entry.debit?).to be_false
-    end
+  it "given an entry with negative amount and account category 'Assets' then it is a credit entry" do
+    entry = entry_with_amount_and_account_with_category -100, 'Assets'
 
-    it 'is debit accounting entry if it belongs to an Assets account and the amount is positive' do
-      account = Account.new(name: 'Cash', category: 'Assets')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
-      entry.account = account
+    expect(entry.credit?).to be_true
+    expect(entry.debit?).to be_false
+  end
 
-      expect(entry.credit?).to be_false
-      expect(entry.debit?).to be_true
-    end
+  it "given an entry with positive amount and account category 'Assets' then it is a debit entry" do
+    entry = entry_with_amount_and_account_with_category 100, 'Assets'
 
-    it 'is credit accounting entry if it belongs to an Expenses account and the amount is negative' do
-      account = Account.new(name: 'Groceries', category: 'Expenses')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
-      entry.account = account
+    expect(entry.credit?).to be_false
+    expect(entry.debit?).to be_true
+  end
 
-      expect(entry.credit?).to be_true
-      expect(entry.debit?).to be_false
-    end
-    
-    it 'is debit accounting entry if it belongs to an Expenses account and the amount is positive' do
-      account = Account.new(name: 'Groceries', category: 'Expenses')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
-      entry.account = account
+  it "given an entry with negative amount and account category 'Expenses' then it is a credit entry" do
+    entry = entry_with_amount_and_account_with_category -100, 'Expenses'
 
-      expect(entry.credit?).to be_false
-      expect(entry.debit?).to be_true
-    end
+    expect(entry.credit?).to be_true
+    expect(entry.debit?).to be_false
+  end
 
-    it 'is credit accounting entry if it belongs to an Liabilities account and the amount is positive' do
-      account = Account.new(name: 'Bank Loan', category: 'Liabilities')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
-      entry.account = account
+  it "given an entry with positive amount and account category 'Expenses' then it is a debit entry" do
+    entry = entry_with_amount_and_account_with_category 100, 'Expenses'
 
-      expect(entry.credit?).to be_true
-      expect(entry.debit?).to be_false
-    end
+    expect(entry.credit?).to be_false
+    expect(entry.debit?).to be_true
+  end
 
-    it 'is debit accounting entry if it belongs to an Liabilities account and the amount is negative' do
-      account = Account.new(name: 'Bank Loan', category: 'Liabilities')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
-      entry.account = account
+  it "given an entry with positive amount and account category 'Liabilities' then it is a credit entry" do
+    entry = entry_with_amount_and_account_with_category 100, 'Liabilities'
 
-      expect(entry.credit?).to be_false
-      expect(entry.debit?).to be_true
-    end
+    expect(entry.credit?).to be_true
+    expect(entry.debit?).to be_false
+  end
 
-    it 'is credit accounting entry if it belongs to an Equity account and the amount is positive' do
-      account = Account.new(name: 'Parents', category: 'Equity')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
-      entry.account = account
+  it "given an entry with negative amount and account category 'Liabilities' then it is a debit entry" do
+    entry = entry_with_amount_and_account_with_category -100, 'Liabilities'
 
-      expect(entry.credit?).to be_true
-      expect(entry.debit?).to be_false
-    end
+    expect(entry.credit?).to be_false
+    expect(entry.debit?).to be_true
+  end
 
-    it 'is debit accounting entry if it belongs to an Equity account and the amount is negative' do
-      account = Account.new(name: 'Parents', category: 'Equity')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
-      entry.account = account
+  it "given an entry with positive amount and account category 'Equity' then it is a credit entry" do
+    entry = entry_with_amount_and_account_with_category 100, 'Equity'
 
-      expect(entry.credit?).to be_false
-      expect(entry.debit?).to be_true
-    end
+    expect(entry.credit?).to be_true
+    expect(entry.debit?).to be_false
+  end
 
-    it 'is credit accounting entry if it belongs to a Revenue account and the amount is positive' do
-      account = Account.new(name: 'Salary', category: 'Revenue')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: 100))
-      entry.account = account
+  it "given an entry with negative amount and account category 'Equity' then it is a debit entry" do
+    entry = entry_with_amount_and_account_with_category -100, 'Equity'
 
-      expect(entry.credit?).to be_true
-      expect(entry.debit?).to be_false
-    end
+    expect(entry.credit?).to be_false
+    expect(entry.debit?).to be_true
+  end
 
-    it 'is debit accounting entry if it belongs to an Revenue account and the amount is negative' do
-      account = Account.new(name: 'Salary', category: 'Revenue')
-      entry = AccountingEntry.new(accounting_entry_attributes(amount: -100))
-      entry.account = account
+  it "given an entry with positive amount and account category 'Revenue' then it is a credit entry" do
+    entry = entry_with_amount_and_account_with_category 100, 'Revenue'
 
-      expect(entry.credit?).to be_false
-      expect(entry.debit?).to be_true
-    end
+    expect(entry.credit?).to be_true
+    expect(entry.debit?).to be_false
+  end
 
+  it "given an entry with negative amount and account category 'Revenue' then it is a debit entry" do
+    entry = entry_with_amount_and_account_with_category -100, 'Revenue'
+
+    expect(entry.credit?).to be_false
+    expect(entry.debit?).to be_true
   end
 
 end
