@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'use_cases/pay_expense'
 
-include MakeTransactionAssertable
+include TransactionMakerAsserter
 
 describe 'Making an expense payment' do
 
@@ -78,38 +78,35 @@ describe 'Making an expense payment' do
 
   basic_validation('when it is initialized and checked for validation', PayExpense)
 
-  context 'Given an expense payment' do
+  context 'given an expense payment' do
 
-    context 'Given an expense payment with a to account of category not Expenses' do
-
-      from_account_invalid_category({
-                                        message: "when having an expense payment with a from account of category not 'Assets' or a 'Liabilities' then it is invalid",
-                                        transaction_maker: PayExpense,
-                                        from_account_category: 'Equity',
-                                        to_account_category: 'Expenses',
-                                        error_message: 'The from account category is not Assets or Liabilities'
-                                    })
-
-      to_account_invalid_category({
-                                      message: 'then it should not be valid because of the to account',
+    from_account_invalid_category({
+                                      message: "when having an expense payment with a from account of category not 'Assets' or a 'Liabilities' then it is invalid",
                                       transaction_maker: PayExpense,
-                                      from_account_category: 'Assets',
-                                      to_account_category: 'Liabilities',
-                                      error_message: 'The to account category is not Expenses'
+                                      from_account_category: 'Equity',
+                                      to_account_category: 'Expenses',
+                                      error_message: 'The from account category is not Assets or Liabilities'
                                   })
 
+    to_account_invalid_category({
+                                    message: 'then it should not be valid because of the to account',
+                                    transaction_maker: PayExpense,
+                                    from_account_category: 'Assets',
+                                    to_account_category: 'Liabilities',
+                                    error_message: 'The to account category is not Expenses'
+                                })
 
-      it 'then it should not save the payment because it is not valid' do
-        pay = create_transaction_maker({
-                                     transaction_maker: PayExpense,
-                                     from_account_category: 'Assets',
-                                     to_account_category: 'Liabilities',
-                                 })
 
-        expect { pay.save }.to raise_error(RuntimeError, 'The expense payment is not valid')
-      end
+    it 'then it should not save the payment because it is not valid' do
+      pay = create_transaction_maker({
+                                         transaction_maker: PayExpense,
+                                         from_account_category: 'Assets',
+                                         to_account_category: 'Liabilities',
+                                     })
 
+      expect { pay.save }.to raise_error(RuntimeError, 'The expense payment is not valid')
     end
+
 
   end
 

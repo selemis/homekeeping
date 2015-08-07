@@ -1,4 +1,4 @@
-module MakeTransactionAssertable
+module TransactionMakerAsserter
 
   #TODO this one should be somewhere else
   def create_transaction_type(values)

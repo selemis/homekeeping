@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'use_cases/make_revenue_transaction'
 
-include MakeTransactionAssertable
+include TransactionMakerAsserter
 
 describe 'Making a Revenue Transaction' do
 

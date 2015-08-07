@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'use_cases/asset_to_asset_transaction'
-require_relative '../support/make_transaction_assertable'
+require_relative '../support/transaction_maker_asserter'
 
-include MakeTransactionAssertable
+include TransactionMakerAsserter
 
 describe "Making an 'Assets' to 'Assets' transaction " do
 
