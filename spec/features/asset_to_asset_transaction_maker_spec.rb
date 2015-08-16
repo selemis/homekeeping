@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'use_cases/asset_to_asset_transaction'
+require 'use_cases/asset_to_asset_transaction_maker'
 require_relative '../support/transaction_maker_asserter'
 
 include TransactionMakerAsserter
@@ -11,7 +11,7 @@ describe "Making an 'Assets' to 'Assets' transaction " do
     savings_account = Account.new(name: 'Savings Account', category: 'Assets')
 
     deposit = create_transaction_type({
-                                          type: AssetToAssetTransaction,
+                                          type: AssetToAssetTransactionMaker,
                                           book_date: Date.today,
                                           from_account: cash,
                                           to_account: savings_account,
@@ -29,13 +29,13 @@ describe "Making an 'Assets' to 'Assets' transaction " do
 
   end
 
-  basic_validation("Given a new 'Assets' to 'Assets' transaction, when checking for validation", AssetToAssetTransaction)
+  basic_validation("Given a new 'Assets' to 'Assets' transaction, when checking for validation", AssetToAssetTransactionMaker)
 
   context "given an 'Assets' to 'Assets' transaction with a from category not 'Assets' " do
 
     from_account_invalid_category({
                                       message: 'when checking for validation then an error occurs for the from account',
-                                      transaction_maker: AssetToAssetTransaction,
+                                      transaction_maker: AssetToAssetTransactionMaker,
                                       from_account_category: 'Liabilities',
                                       to_account_category: 'Assets',
                                       error_message: 'The from account category is not Assets'
@@ -43,7 +43,7 @@ describe "Making an 'Assets' to 'Assets' transaction " do
 
     it 'when saving the transaction then it raises an exception' do
       deposit = create_transaction_maker ({
-                                        transaction_maker: AssetToAssetTransaction,
+                                        transaction_maker: AssetToAssetTransactionMaker,
                                         from_account_category: 'Liabilities',
                                         to_account_category: 'Assets',
                                     })
@@ -55,7 +55,7 @@ describe "Making an 'Assets' to 'Assets' transaction " do
 
   to_account_invalid_category({
                                   message: "given 'Assets' to 'Assets' transaction with a to account category not 'Assets' when checking for validation then an errors occurs for the to account",
-                                  transaction_maker: AssetToAssetTransaction,
+                                  transaction_maker: AssetToAssetTransactionMaker,
                                   from_account_category: 'Assets',
                                   to_account_category: 'Liabilities',
                                   error_message: 'The to account category is not Assets'
