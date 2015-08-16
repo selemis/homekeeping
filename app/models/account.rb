@@ -1,3 +1,9 @@
+require 'assets'
+require 'equity'
+require 'liabilities'
+require 'revenue'
+require 'expenses'
+
 class Account < ActiveRecord::Base
 
   CATEGORIES = [Assets.name, Liabilities.name, Equity.name, Revenue.name, Expenses.name]
