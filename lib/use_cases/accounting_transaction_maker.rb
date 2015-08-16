@@ -1,4 +1,4 @@
-class MakeAccountingTransaction
+class AccountingTransactionMaker
   include ActiveModel::Validations
 
   attr_accessor :from, :to, :date, :amount

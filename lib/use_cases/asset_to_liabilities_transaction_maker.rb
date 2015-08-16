@@ -1,7 +1,7 @@
 require 'validators/asset_validator'
 require 'validators/liabilities_validator'
 
-class AssetToLiabilitiesTransactionMaker < MakeAccountingTransaction
+class AssetToLiabilitiesTransactionMaker < AccountingTransactionMaker
 
   validates :from, asset: true
   validates :to, liabilities: true

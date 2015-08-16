@@ -1,8 +1,7 @@
 require'validators/asset_or_liabilities_validator'
 require 'validators/expenses_validator'
-require 'use_cases/make_accounting_transaction'
 
-class PayExpense < MakeAccountingTransaction
+class PayExpense < AccountingTransactionMaker
 
   validates :from, asset_or_liabilities: true
   validates :to, expenses: true

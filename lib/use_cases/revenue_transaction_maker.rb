@@ -1,8 +1,7 @@
 require 'validators/revenue_validator'
 require 'validators/asset_validator'
-require 'use_cases/make_accounting_transaction'
 
-class MakeRevenueTransaction < MakeAccountingTransaction
+class RevenueTransactionMaker < AccountingTransactionMaker
 
   validates :from, revenue: true
   validates :to, asset: true
