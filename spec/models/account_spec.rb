@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'services/credit_calculator'
+require 'services/debit_calculator'
 
 include AccountAssertable
 
@@ -20,7 +22,6 @@ describe Account do
 
     it 'is valid with example attributes' do
       @account.valid?
-      puts @account.errors.full_messages
       expect(@account.valid?).to be_true
     end
 
@@ -29,25 +30,35 @@ describe Account do
     end
 
     it 'has a zero credit if it has no entries' do
-      expect(@account.calculate_credit).to eq 0
+      creditor = CreditCalculator.new
+      expect(creditor.calculate_credit(@account)).to eq 0
     end
 
     it 'has a zero debit if it has no entries' do
-      expect(@account.calculate_debit).to eq 0
-    end
-
-    it 'has a zero debit if the account has only credits' do
-      @account.accounting_entries << AccountingEntry.new(accounting_entry_attributes)
-
-      expect(@account.calculate_debit).to eq accounting_entry_attributes[:amount]
-      expect(@account.calculate_credit).to eq 0
+      debitor = DebitCalculator.new  
+      expect(debitor.calculate_debit(@account)).to eq 0
     end
 
     it 'has a zero credit if the account has only debits' do
+      @account.accounting_entries << AccountingEntry.new(accounting_entry_attributes)
+      debitor = DebitCalculator.new  
+      expect(debitor.calculate_debit(@account)).to eq accounting_entry_attributes[:amount]
+
+
+      #expect(@account.calculate_debit).to eq accounting_entry_attributes[:amount]
+      creditor = CreditCalculator.new
+      expect(creditor.calculate_credit(@account)).to eq 0
+    end
+
+    it 'has a zero debit if the account has only credits' do
       @account.accounting_entries << AccountingEntry.new(accounting_entry_attributes({amount: -50}))
 
-      expect(@account.calculate_debit).to eq 0
-      expect(@account.calculate_credit).to eq -50
+      creditor = CreditCalculator.new
+      expect(creditor.calculate_credit(@account)).to eq -50
+
+      debitor = DebitCalculator.new  
+      expect(debitor.calculate_debit(@account)).to eq 0
+      #expect(@account.calculate_debit).to eq 0
     end
 
   end
