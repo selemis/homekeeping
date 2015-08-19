@@ -5,28 +5,24 @@ class AccountingTransaction < ActiveRecord::Base
   validates :book_date, presence: true
 
   def credit(account, amount)
-    credit_account = CreditAccount.new
-    credit_account.account = account
-    credit_account.book_date = book_date
-    credit_account.amount = amount
-    entry = credit_account.credit
-    accounting_entry = AccountingEntry.new(book_date: entry.book_date, amount: entry.amount)
-    account.accounting_entries << accounting_entry
-    accounting_entries << accounting_entry
+    action(CreditAccount.new, account, amount)
   end
 
   def debit(account, amount)
-    debit_account = DebitAccount.new
-    debit_account.account = account
-    debit_account.book_date = book_date
-    debit_account.amount = amount
-    entry = debit_account.debit
+    action(DebitAccount.new, account, amount)
+  end
+
+  private
+
+  def action(operation, account, amount)
+    operation.account = account
+    operation.book_date = book_date
+    operation.amount = amount
+    entry = operation.create_entry
     accounting_entry = AccountingEntry.new(book_date: entry.book_date, amount: entry.amount)
     account.accounting_entries << accounting_entry
     accounting_entries << accounting_entry
   end
-
-  private
 
   def credits_equals_debits?
     sum_entry_amounts {|entry| entry.debit?} == sum_entry_amounts {|entry| entry.credit?} 

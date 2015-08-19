@@ -44,7 +44,7 @@ describe DebitAccount do
         account = stub('Account', category: 'Assets')
         @debit_account.account = account
 
-        entry = @debit_account.debit
+        entry = @debit_account.create_entry
 
         assert_entry_with_amount(account, entry, 10)
       end
@@ -53,7 +53,7 @@ describe DebitAccount do
         account = stub('Account', category: 'Liabilities')
         @debit_account.account = account
 
-        entry = @debit_account.debit
+        entry = @debit_account.create_entry
 
         assert_entry_with_amount(account, entry, -10)
       end
@@ -62,7 +62,7 @@ describe DebitAccount do
         account = stub('Account', category: 'Equity')
         @debit_account.account = account
 
-        entry = @debit_account.debit
+        entry = @debit_account.create_entry
 
         assert_entry_with_amount(account, entry, -10)
       end
@@ -71,7 +71,7 @@ describe DebitAccount do
         account = stub('Account', category: 'Expenses')
         @debit_account.account = account
 
-        entry = @debit_account.debit
+        entry = @debit_account.create_entry
 
         assert_entry_with_amount(account, entry, 10)
       end
@@ -80,7 +80,7 @@ describe DebitAccount do
         account = stub('Account', category: 'Revenue')
         @debit_account.account = account
 
-        entry = @debit_account.debit
+        entry = @debit_account.create_entry
 
         assert_entry_with_amount(account, entry, -10)
       end

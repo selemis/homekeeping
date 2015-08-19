@@ -19,10 +19,6 @@ describe Account do
       expect(@account.valid?).to be_true
     end
 
-    it 'has a zero balance if it has no entries' do
-      expect(@account.balance).to eq 0
-    end
-
   end
 
   it 'requires a name' do
@@ -68,7 +64,7 @@ describe Account do
       account = Account.new(account_attributes(category: category))
 
       account.valid?
-      
+
       expect(account.errors[:category].any?).to eq(true)
     end
   end

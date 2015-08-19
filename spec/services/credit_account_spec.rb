@@ -46,7 +46,7 @@ describe CreditAccount do
         account = stub('Account', category: 'Assets')
         @credit_account.account = account
 
-        entry = @credit_account.credit
+        entry = @credit_account.create_entry
 
         assert_entry_with_amount(account, entry, -10)
       end
@@ -55,7 +55,7 @@ describe CreditAccount do
         account = stub('Account', category: 'Liabilities')
         @credit_account.account = account
 
-        entry = @credit_account.credit
+        entry = @credit_account.create_entry
 
         assert_entry_with_amount(account, entry, 10)
       end
@@ -64,7 +64,7 @@ describe CreditAccount do
         account = stub('Account', category: 'Equity')
         @credit_account.account = account
 
-        entry = @credit_account.credit
+        entry = @credit_account.create_entry
 
         assert_entry_with_amount(account, entry, 10)
       end
@@ -73,7 +73,7 @@ describe CreditAccount do
         account = stub('Account', category: 'Expenses')
         @credit_account.account = account
 
-        entry = @credit_account.credit
+        entry = @credit_account.create_entry
 
         assert_entry_with_amount(account, entry, -10)
       end
@@ -82,7 +82,7 @@ describe CreditAccount do
         account = stub('Account', category: 'Revenue')
         @credit_account.account = account
 
-        entry = @credit_account.credit
+        entry = @credit_account.create_entry
 
         assert_entry_with_amount(account, entry, 10)
       end
