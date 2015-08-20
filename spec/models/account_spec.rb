@@ -1,6 +1,4 @@
 require 'spec_helper'
-require 'services/credit_calculator'
-require 'services/debit_calculator'
 
 describe Account do
 

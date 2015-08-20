@@ -61,7 +61,7 @@ describe AccountingTransaction do
         @trans.accounting_entries << entry
       end
 
-      it ' when checking validation, then it raises no errors for accounting entries size' do
+      it 'when checking validation, then it raises no errors for accounting entries size' do
         @trans.valid?
 
         expect(@trans.errors[:accounting_entries_size].any?).to eq(false)
