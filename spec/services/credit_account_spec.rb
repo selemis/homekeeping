@@ -1,38 +1,18 @@
 require 'services/credit_account'
+require_relative '../support/entry_bo_assertable'
 require 'date'
 require 'assets'
+require 'liabilities'
+require 'equity'
+require 'expenses'
+require 'revenue'
 
-def assert_entry_with_amount(account, entry, amount)
-  expect(entry.amount).to eq amount
-  expect(entry.book_date).to eq Date.today
-  expect(entry.account).to eq account
-end
+include EntryBoAssertable
 
 describe CreditAccount do
 
-  context 'given crediting an account' do
-
     before do
       @credit_account = CreditAccount.new
-    end
-
-    it 'takes an account' do
-      account = stub
-      @credit_account.account = account
-
-      expect(@credit_account.account).to eq account
-    end
-
-    it 'takes a positive amount' do
-      @credit_account.amount = 10
-
-      expect(@credit_account.amount).to eq 10
-    end
-
-    it 'takes a book date' do
-      @credit_account.book_date = Date.today
-
-      expect(@credit_account.book_date).to eq Date.today
     end
 
     context 'given the amount is 10 and the booking date it today' do
@@ -47,7 +27,6 @@ describe CreditAccount do
         @credit_account.account = account
 
         entry = @credit_account.create_entry
-
         assert_entry_with_amount(account, entry, -10)
       end
 
@@ -88,7 +67,5 @@ describe CreditAccount do
       end
 
     end
-
-  end
 
 end
