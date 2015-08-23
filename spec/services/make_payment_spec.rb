@@ -1,12 +1,7 @@
-require 'use_cases/pay_expense'
+require 'services/pay_expense'
 require_relative '../support/transaction_maker_asserter'
 
 include TransactionMakerAsserter
-
-repository = Object.new
-def repository.valid?
-  true
-end
 
 describe 'Making an expense payment' do
 
@@ -106,7 +101,7 @@ describe 'Making an expense payment' do
     from_account_invalid_category({
                                       message: "when having an expense payment with a from account of category not 'Assets' or a 'Liabilities' then it is invalid",
                                       transaction_maker: PayExpense,
-                                      repository: repository,
+                                      # repository: repository,
                                       from_account_category: 'Equity',
                                       to_account_category: 'Expenses',
                                       error_message: 'The from account category is not Assets or Liabilities'
@@ -115,7 +110,7 @@ describe 'Making an expense payment' do
     to_account_invalid_category({
                                     message: 'then it should not be valid because of the to account',
                                     transaction_maker: PayExpense,
-                                    repository: repository,
+                                    # repository: repository,
                                     from_account_category: 'Assets',
                                     to_account_category: 'Liabilities',
                                     error_message: 'The to account category is not Expenses'

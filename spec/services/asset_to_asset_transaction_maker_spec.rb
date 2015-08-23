@@ -1,5 +1,4 @@
-require 'spec_helper'
-require 'use_cases/asset_to_asset_transaction_maker'
+require 'services/asset_to_asset_transaction_maker'
 require_relative '../support/transaction_maker_asserter'
 
 include TransactionMakerAsserter

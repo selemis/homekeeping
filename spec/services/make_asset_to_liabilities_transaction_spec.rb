@@ -1,5 +1,5 @@
-require 'spec_helper'
-require 'use_cases/asset_to_liabilities_transaction_maker'
+# require 'spec_helper'
+require 'services/asset_to_liabilities_transaction_maker'
 
 include TransactionMakerAsserter
 

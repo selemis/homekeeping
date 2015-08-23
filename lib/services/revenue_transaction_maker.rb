@@ -1,5 +1,6 @@
 require 'validators/revenue_validator'
 require 'validators/asset_validator'
+require 'services/accounting_transaction_maker'
 
 class RevenueTransactionMaker < AccountingTransactionMaker
 

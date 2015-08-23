@@ -1,4 +1,4 @@
-require 'use_cases/accounting_transaction_maker'
+require 'services/accounting_transaction_maker'
 require 'validators/asset_validator'
 
 class AssetToAssetTransactionMaker < AccountingTransactionMaker

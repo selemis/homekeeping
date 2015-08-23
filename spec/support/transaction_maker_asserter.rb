@@ -10,45 +10,6 @@ module TransactionMakerAsserter
     end
   end
 
-  def assert_transaction(values)
-    trans = values[:transaction]
-    entry1 = trans.accounting_entries.select { |entry| entry.account == values[:from_account] }.first
-    entry2 = trans.accounting_entries.select { |entry| entry.account == values[:to_account] }.first
-    expect(trans.valid?).to be(true)
-    expect(trans.accounting_entries.size).to eq 2
-    expect(entry1.amount).to eq values[:from_amount]
-    expect(entry2.amount).to eq values[:to_amount]
-  end
-
-  def basic_validation(context_message, make_transaction_type)
-
-    context context_message do
-
-      before do
-        repository = AccountingTransaction.new
-        @transaction_maker = make_transaction_type.new(repository)
-        @transaction_maker.valid?
-      end
-
-      it 'then it requires a book date' do
-        expect(@transaction_maker.errors[:date].any?).to be(true)
-      end
-
-      it 'then it requires a from account' do
-        expect(@transaction_maker.errors[:from].any?).to be(true)
-      end
-
-      it 'then it requires a to account' do
-        expect(@transaction_maker.errors[:to].any?).to be(true)
-      end
-
-      it 'then it requires an amount' do
-        expect(@transaction_maker.errors[:amount].any?).to be(true)
-      end
-
-    end
-
-  end
 
   def from_account_invalid_category(values)
     account_invalid_category(:from, values)

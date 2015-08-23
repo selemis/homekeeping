@@ -1,5 +1,5 @@
-require 'spec_helper'
-require 'use_cases/revenue_transaction_maker'
+# require 'spec_helper'
+require 'services/revenue_transaction_maker'
 
 include TransactionMakerAsserter
 

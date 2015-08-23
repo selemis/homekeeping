@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'use_cases/pay_expense'
-require 'use_cases/revenue_transaction_maker'
+# require 'spec_helper'
+require 'services/pay_expense'
+require 'services/revenue_transaction_maker'
 require_relative '../support/transaction_maker_asserter'
 
 include TransactionMakerAsserter

@@ -1,5 +1,5 @@
 require 'active_model'
-require 'use_cases/accounting_transaction_maker'
+require 'services/accounting_transaction_maker'
 
 describe AccountingTransactionMaker do
 
