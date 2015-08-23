@@ -14,7 +14,7 @@ describe Account do
 
     it 'is valid with example attributes' do
       @account.valid?
-      expect(@account.valid?).to be_true
+      expect(@account.valid?).to be(true)
     end
 
   end
@@ -24,7 +24,7 @@ describe Account do
 
     account.valid?
 
-    expect(account.errors[:name].any?).to be_true
+    expect(account.errors[:name].any?).to be(true)
   end
 
   it 'has entries' do

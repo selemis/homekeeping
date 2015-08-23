@@ -1,5 +1,6 @@
 require 'services/credit_account'
 require 'services/debit_account'
+
 class AccountingTransaction < ActiveRecord::Base
 
   has_many :accounting_entries

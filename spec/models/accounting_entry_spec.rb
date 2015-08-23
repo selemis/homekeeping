@@ -57,71 +57,71 @@ describe AccountingEntry do
   it "given an entry with negative amount and account category 'Assets' then it is a credit entry" do
     entry = entry_with_amount_and_account_with_category -100, 'Assets'
 
-    expect(entry.credit?).to be_true
-    expect(entry.debit?).to be_false
+    expect(entry.credit?).to be(true)
+    expect(entry.debit?).to be(false)
   end
 
   it "given an entry with positive amount and account category 'Assets' then it is a debit entry" do
     entry = entry_with_amount_and_account_with_category 100, 'Assets'
 
-    expect(entry.credit?).to be_false
-    expect(entry.debit?).to be_true
+    expect(entry.credit?).to be(false)
+    expect(entry.debit?).to be(true)
   end
 
   it "given an entry with negative amount and account category 'Expenses' then it is a credit entry" do
     entry = entry_with_amount_and_account_with_category -100, 'Expenses'
 
-    expect(entry.credit?).to be_true
-    expect(entry.debit?).to be_false
+    expect(entry.credit?).to be(true)
+    expect(entry.debit?).to be(false)
   end
 
   it "given an entry with positive amount and account category 'Expenses' then it is a debit entry" do
     entry = entry_with_amount_and_account_with_category 100, 'Expenses'
 
-    expect(entry.credit?).to be_false
-    expect(entry.debit?).to be_true
+    expect(entry.credit?).to be(false)
+    expect(entry.debit?).to be(true)
   end
 
   it "given an entry with positive amount and account category 'Liabilities' then it is a credit entry" do
     entry = entry_with_amount_and_account_with_category 100, 'Liabilities'
 
-    expect(entry.credit?).to be_true
-    expect(entry.debit?).to be_false
+    expect(entry.credit?).to be(true)
+    expect(entry.debit?).to be(false)
   end
 
   it "given an entry with negative amount and account category 'Liabilities' then it is a debit entry" do
     entry = entry_with_amount_and_account_with_category -100, 'Liabilities'
 
-    expect(entry.credit?).to be_false
-    expect(entry.debit?).to be_true
+    expect(entry.credit?).to be(false)
+    expect(entry.debit?).to be(true)
   end
 
   it "given an entry with positive amount and account category 'Equity' then it is a credit entry" do
     entry = entry_with_amount_and_account_with_category 100, 'Equity'
 
-    expect(entry.credit?).to be_true
-    expect(entry.debit?).to be_false
+    expect(entry.credit?).to be(true)
+    expect(entry.debit?).to be(false)
   end
 
   it "given an entry with negative amount and account category 'Equity' then it is a debit entry" do
     entry = entry_with_amount_and_account_with_category -100, 'Equity'
 
-    expect(entry.credit?).to be_false
-    expect(entry.debit?).to be_true
+    expect(entry.credit?).to be(false)
+    expect(entry.debit?).to be(true)
   end
 
   it "given an entry with positive amount and account category 'Revenue' then it is a credit entry" do
     entry = entry_with_amount_and_account_with_category 100, 'Revenue'
 
-    expect(entry.credit?).to be_true
-    expect(entry.debit?).to be_false
+    expect(entry.credit?).to be(true)
+    expect(entry.debit?).to be(false)
   end
 
   it "given an entry with negative amount and account category 'Revenue' then it is a debit entry" do
     entry = entry_with_amount_and_account_with_category -100, 'Revenue'
 
-    expect(entry.credit?).to be_false
-    expect(entry.debit?).to be_true
+    expect(entry.credit?).to be(false)
+    expect(entry.debit?).to be(true)
   end
 
 end

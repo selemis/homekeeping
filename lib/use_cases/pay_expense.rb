@@ -1,5 +1,6 @@
 require'validators/asset_or_liabilities_validator'
 require 'validators/expenses_validator'
+require 'use_cases/accounting_transaction_maker'
 
 class PayExpense < AccountingTransactionMaker
 

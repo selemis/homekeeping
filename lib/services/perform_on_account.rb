@@ -1,4 +1,5 @@
 require 'business_objects/accounting_entry_bo'
+require 'liabilities'
 
 class PerformOnAccount
 

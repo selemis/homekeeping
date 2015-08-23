@@ -10,5 +10,4 @@ class AssetToAssetTransactionMaker < AccountingTransactionMaker
     'The asset transaction is not valid'
   end
 
-
 end

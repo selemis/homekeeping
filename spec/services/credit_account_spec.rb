@@ -23,7 +23,7 @@ describe CreditAccount do
       end
 
       it "when the account is 'Assets' category then it creates an accounting entry with negative amount" do
-        account = stub('Account', category: 'Assets')
+        account = double('Account', category: 'Assets')
         @credit_account.account = account
 
         entry = @credit_account.create_entry
@@ -31,7 +31,7 @@ describe CreditAccount do
       end
 
       it "when the account is 'Liabilities' category then it creates an accounting entry with positive amount" do
-        account = stub('Account', category: 'Liabilities')
+        account = double('Account', category: 'Liabilities')
         @credit_account.account = account
 
         entry = @credit_account.create_entry
@@ -40,7 +40,7 @@ describe CreditAccount do
       end
 
       it "when the account is 'Equity' category then it creates an accounting entry with positive amount" do
-        account = stub('Account', category: 'Equity')
+        account = double('Account', category: 'Equity')
         @credit_account.account = account
 
         entry = @credit_account.create_entry
@@ -49,7 +49,7 @@ describe CreditAccount do
       end
 
       it "when the account is 'Expenses' category then it creates an accounting entry with negative amount" do
-        account = stub('Account', category: 'Expenses')
+        account = double('Account', category: 'Expenses')
         @credit_account.account = account
 
         entry = @credit_account.create_entry
@@ -58,7 +58,7 @@ describe CreditAccount do
       end
 
       it "when the account is 'Revenue' category then it creates an accounting entry with positive amount" do
-        account = stub('Account', category: 'Revenue')
+        account = double('Account', category: 'Revenue')
         @credit_account.account = account
 
         entry = @credit_account.create_entry

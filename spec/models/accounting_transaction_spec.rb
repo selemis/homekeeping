@@ -94,7 +94,7 @@ describe AccountingTransaction do
       it 'when checking for validation, then it requires the credits to be equal to debits' do
         @transaction.valid?
 
-        expect(@transaction.errors[:credits_debits].any?).to be_false
+        expect(@transaction.errors[:credits_debits].any?).to be(false)
       end
 
       it 'when adding another entry and checking for validation then an error occurs because credits do not equal to debits' do
@@ -104,7 +104,7 @@ describe AccountingTransaction do
 
         @transaction.valid?
 
-        expect(@transaction.errors[:credits_debits].any?).to be_true
+        expect(@transaction.errors[:credits_debits].any?).to be(true)
       end
 
     end
@@ -119,8 +119,8 @@ describe AccountingTransaction do
       end
 
       it 'when checking for validation then an error occurs because the booking date of all the entries are not the same' do
-        expect(@transaction.valid?).to be_false
-        expect(@transaction.errors[:entries_book_date].any?).to be_true
+        expect(@transaction.valid?).to be(false)
+        expect(@transaction.errors[:entries_book_date].any?).to be(true)
       end
 
     end

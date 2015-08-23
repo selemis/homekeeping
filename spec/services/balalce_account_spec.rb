@@ -11,7 +11,7 @@ describe BalanceAccount do
   end
 
   it 'when account has no entries then it is zero' do
-    account = stub('Account', accounting_entries: [])
+    account = double('Account', accounting_entries: [])
 
     balance = @balancer.balance(account)
 
@@ -22,13 +22,13 @@ describe BalanceAccount do
 
     before do
       accounting_entries = [
-          stub('Entry1', book_date: date_from('01-01-2015'), amount: 100.50),
-          stub('Entry2', book_date: date_from('01-01-2015'), amount: -20.50),
-          stub('Entry3', book_date: date_from('02-01-2015'), amount: 10),
-          stub('Entry4', book_date: date_from('03-01-2015'), amount: -30),
-          stub('Entry5', book_date: date_from('04-01-2015'), amount: 40.20)
+          double('Entry1', book_date: date_from('01-01-2015'), amount: 100.50),
+          double('Entry2', book_date: date_from('01-01-2015'), amount: -20.50),
+          double('Entry3', book_date: date_from('02-01-2015'), amount: 10),
+          double('Entry4', book_date: date_from('03-01-2015'), amount: -30),
+          double('Entry5', book_date: date_from('04-01-2015'), amount: 40.20)
       ]
-      @account = stub('Account', accounting_entries: accounting_entries)
+      @account = double('Account', accounting_entries: accounting_entries)
     end
 
     it 'sums all the entries for an account' do

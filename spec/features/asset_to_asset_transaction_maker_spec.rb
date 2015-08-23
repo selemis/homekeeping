@@ -6,30 +6,30 @@ include TransactionMakerAsserter
 
 describe "Making an 'Assets' to 'Assets' transaction " do
 
-  it 'when I deposit 100 value of cash to savings account, then it creates an entry of -100 for cash and an entry of 100 for savings account' do
-    cash = Account.new(name: 'Cash', category: 'Assets')
-    savings_account = Account.new(name: 'Savings Account', category: 'Assets')
-
-    deposit = create_transaction_type({
-                                          type: AssetToAssetTransactionMaker,
-                                          book_date: Date.today,
-                                          from_account: cash,
-                                          to_account: savings_account,
-                                          amount: 1000
-                                      })
-
-    deposit.save
-
-    assert_transaction({
-                           transaction: deposit.transaction,
-                           book_date: Date.today,
-                           from_account: cash, from_amount: -1000,
-                           to_account: savings_account, to_amount: 1000
-                       })
-
-  end
-
-  basic_validation("Given a new 'Assets' to 'Assets' transaction, when checking for validation", AssetToAssetTransactionMaker)
+  # it 'when I deposit 100 value of cash to savings account, then it creates an entry of -100 for cash and an entry of 100 for savings account' do
+  #   cash = Account.new(name: 'Cash', category: 'Assets')
+  #   savings_account = Account.new(name: 'Savings Account', category: 'Assets')
+  #
+  #   deposit = create_transaction_type({
+  #                                         type: AssetToAssetTransactionMaker,
+  #                                         book_date: Date.today,
+  #                                         from_account: cash,
+  #                                         to_account: savings_account,
+  #                                         amount: 1000
+  #                                     })
+  #
+  #   deposit.save
+  #
+  #   assert_transaction({
+  #                          transaction: deposit.transaction,
+  #                          book_date: Date.today,
+  #                          from_account: cash, from_amount: -1000,
+  #                          to_account: savings_account, to_amount: 1000
+  #                      })
+  #
+  # end
+  #
+  # basic_validation("Given a new 'Assets' to 'Assets' transaction, when checking for validation", AssetToAssetTransactionMaker)
 
   context "given an 'Assets' to 'Assets' transaction with a from category not 'Assets' " do
 

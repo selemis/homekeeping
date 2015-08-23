@@ -7,7 +7,7 @@ describe PerformOnAccount do
     end
 
     it 'takes an account' do
-      account = stub
+      account = double
       @perform_on_account.account = account
 
       expect(@perform_on_account.account).to eq account

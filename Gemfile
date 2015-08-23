@@ -17,11 +17,17 @@ gem 'coffee-rails', '~> 4.1.0'
 group :test, :development do
   gem 'minitest'
   gem 'test-unit'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.0'
+  # gem 'rspec', github: 'rspec/rspec'
+  # gem 'rspec-core', github: 'rspec/rspec-core'
+  # gem 'rspec-mocks', github: 'rspec/rspec-mocks'
+  # gem 'rspec-expectations', github: 'rspec/rspec-expectations'
+  # gem 'rspec-support', github: 'rspec/rspec-support'
 end
 
+
 group :test do
-  gem 'capybara'
+  gem 'capybara', '~> 2.2.0'
 end
 
 gem 'simplecov', require: false

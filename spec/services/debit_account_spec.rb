@@ -23,7 +23,8 @@ describe DebitAccount do
       end
 
       it "when the account is 'Assets' category then it creates an accounting entry with positive amount" do
-        account = stub('Account', category: 'Assets')
+        account = double('Account')
+        allow(account).to receive(:category).and_return('Assets')
         @debit_account.account = account
 
         entry = @debit_account.create_entry
@@ -32,7 +33,8 @@ describe DebitAccount do
       end
 
       it "when the account is 'Liabilities' category then it creates an accounting entry with negative amount" do
-        account = stub('Account', category: 'Liabilities')
+        account = double('Account')
+        allow(account).to receive(:category).and_return 'Liabilities'
         @debit_account.account = account
 
         entry = @debit_account.create_entry
@@ -41,7 +43,7 @@ describe DebitAccount do
       end
 
       it "when the account is 'Equity' category then it creates an accounting entry with negative amount" do
-        account = stub('Account', category: 'Equity')
+        account = double('Account', category: 'Equity')
         @debit_account.account = account
 
         entry = @debit_account.create_entry
@@ -50,7 +52,8 @@ describe DebitAccount do
       end
 
       it "when the account is 'Expenses' category then it creates an accounting entry with positive amount" do
-        account = stub('Account', category: 'Expenses')
+        account = double('Account')
+        allow(account).to receive(:category).and_return('Expenses')
         @debit_account.account = account
 
         entry = @debit_account.create_entry
@@ -59,7 +62,8 @@ describe DebitAccount do
       end
 
       it "when the account is 'Revenue' category then it creates an accounting entry with negative amount" do
-        account = stub('Account', category: 'Revenue')
+        account = double('Account')
+        allow(account).to receive(:category).and_return('Revenue')
         @debit_account.account = account
 
         entry = @debit_account.create_entry

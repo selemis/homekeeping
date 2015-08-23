@@ -5,30 +5,6 @@ include TransactionMakerAsserter
 
 describe 'Making a Revenue Transaction' do
 
-  it "when a salary payment of value 1000 occurs then it creates an entry of 1000 for 'Salary' and entry of 1000 for 'Savings Account'" do
-    salary = Account.new(name: 'Salary', category: 'Revenue')
-    savings_account = Account.new(name: 'Savings account', category: 'Assets')
-    salary_payment = create_transaction_type({
-                                                 type: RevenueTransactionMaker,
-                                                 book_date: Date.today,
-                                                 from_account: salary,
-                                                 to_account: savings_account,
-                                                 amount: 1000
-                                             })
-
-    salary_payment.save
-
-    assert_transaction({
-                       transaction: salary_payment.transaction,
-                       book_date: Date.today,
-                       from_account: salary, from_amount: 1000,
-                       to_account: savings_account, to_amount: 1000
-                   })
-  end
-
-  
-  basic_validation('Given a new revenue transaction, when checking for validation', RevenueTransactionMaker)
-
   context "Given an a revenue transaction with a to account category not 'Assets'" do
 
     from_account_invalid_category({
@@ -58,6 +34,5 @@ describe 'Making a Revenue Transaction' do
     end
 
   end
-
 
 end
